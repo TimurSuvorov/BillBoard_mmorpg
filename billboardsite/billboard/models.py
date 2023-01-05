@@ -66,10 +66,10 @@ class Category(models.Model):
 
 class Reply(models.Model):
     announcement = models.ForeignKey(to=Announcement,
-                                     related_name='relies',
+                                     related_name='replies',
                                      on_delete=models.CASCADE)
-    content =models.TextField(validators=[MinLengthValidator(4)],
-                              verbose_name='Содержание')
+    content = models.TextField(validators=[MinLengthValidator(4)],
+                               verbose_name='Содержание')
     time_create = models.DateTimeField(auto_now_add=True,
                                        verbose_name='Дата создания')
     time_update = models.DateTimeField(auto_now=True,
@@ -79,9 +79,8 @@ class Reply(models.Model):
                                     related_name='auth_replies',
                                     verbose_name='Автор отликов')
 
-
     def __str__(self):
-        return f'{self.catname}'
+        return f'{self.content[:15]}'
 
     class Meta:
         verbose_name = 'Отлик'
