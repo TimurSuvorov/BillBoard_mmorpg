@@ -4,13 +4,13 @@
 {% load custom_tags %}
 
 {% block title %}
-Все объявления
+Объявления категории {{ category }}
 {% endblock title %}
 
 
 {% block announcement %}
 
-    {% for announcement in all_announcement %}
+    {% for announcement in category_announcement %}
         {% isupdated announcement.pk as isupdated %}
 			    			<div class="col-md-12">
 									<div class="blog-entry ftco-animate d-md-flex">
@@ -30,6 +30,14 @@
 				            </div>
 									</div>
 								</div>
+    {% empty %}
+        <div class="col-md-12">
+            <div class="blog-entry ftco-animate d-md-flex">
+                <div class="text text-2 pl-md-4">
+                    <h3 class="mb-2">В этой категории пока нет объявлений.</h3>
+                </div>
+            </div>
+        </div>
     {% endfor %}
 
 {% endblock announcement %}

@@ -1,7 +1,7 @@
 import datetime
 
 from django import template
-from billboard.models import Announcement
+from billboard.models import Announcement, Category
 
 register = template.Library()
 
@@ -14,3 +14,7 @@ def isupdated(pk):
         return True
     return False
 
+@register.simple_tag()
+def get_categories():
+    categories = Category.objects.all()
+    return categories

@@ -8612,7 +8612,7 @@ h1, h2, h3, h4, h5,
       width: 100%;
       display: block; }
       .blog-entry .text .meta-wrap .meta span {
-        font-size: 14px;
+        font-size: 12px;
         margin: 0 10px 0 0;
         color: #bfbfbf; }
         .blog-entry .text .meta-wrap .meta span a {
@@ -9184,8 +9184,8 @@ textarea.form-control {
   padding: 0; }
   .categories li, .sidelink li {
     position: relative;
-    margin-bottom: 10px;
-    padding-bottom: 10px;
+    margin-bottom: 4px;
+    padding-bottom: 0px;
     border-bottom: 1px solid #dee2e6;
     list-style: none; }
     .categories li:last-child, .sidelink li:last-child {
