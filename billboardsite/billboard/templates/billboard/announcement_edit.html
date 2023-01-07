@@ -1,0 +1,25 @@
+{% extends 'flatpages/base.html' %}
+
+{% load static %}
+
+
+{% block title %}
+    Редактирование объявления
+{% endblock title %}
+
+
+{% block announcement %}
+    <div class="col-md-12">
+        <h1 class="mb-2">Редактирование объявления</h1>
+    </div>
+
+    <form action="" method="post">{% csrf_token %}
+        <div class="form-error">{{ form.non_field_errors }}</div>
+        {% for form_field in form %}
+            <p><label class="form-label" for="{{ form_field.id_for_label }}">{{ form_field.label}}: </label>{{ form_field }}</p>
+            <div class="form-error">{{ form_field.errors }}</div>
+        {% endfor %}
+        <input type="submit" value='Изменить'>
+    </form>
+
+{% endblock announcement %}

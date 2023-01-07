@@ -41,7 +41,13 @@
 		<aside id="colorlib-aside" role="complementary" class="js-fullheight">
 			<nav id="colorlib-main-menu" role="navigation">
 				<ul>
-					<li class="colorlib-active"><a href="base.html">Home</a></li>
+					<li {% if list_selected %}
+                            class="colorlib-active"><a href="">
+                        {% else %}
+                            ><a href="{% url 'announcement_list' %}">
+                        {% endif %}Все объявления</a>
+                    </li>
+
 					<li><a href="fashion.html">Fashion</a></li>
 					<li><a href="travel.html">Travel</a></li>
 					<li><a href="about.html">About</a></li>
@@ -84,7 +90,11 @@
 	            	<h3 class="sidebar-heading">Категории</h3>
 	              <ul class="categories">
                   {% for category in categories %}
-	                <li><a href="{% url 'announcement_by_category' pk=category.pk %}">{{ category }}<span>({{ category.cat_announcements.all.count }})</span></a></li>
+                          {% if category_selected == category.pk %}
+                          <li><a style="color: #1eafed; font-family: Lora, Arial, serif">{{ category }}<span>({{ category.cat_announcements.all.count }})</span></a></li>
+                      {% else %}
+                          <li><a style="font-family: Lora, Arial, serif"href="{% url 'announcement_by_category' pk=category.pk %}">{{ category }}<span>({{ category.cat_announcements.all.count }})</span></a></li>
+                      {% endif %}
                   {% endfor %}
 	              </ul>
 	            </div>

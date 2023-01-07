@@ -1,0 +1,25 @@
+{% extends 'flatpages/base.html' %}
+
+{% load static %}
+
+
+{% block title %}
+    Удаление объявления
+{% endblock title %}
+
+
+{% block announcement %}
+    <div class="col-md-12">
+        <h1 class="mb-2">Удаление объявления «{{ object|truncatechars:40 }}»</h1>
+    </div>
+
+    <form method="post">{% csrf_token %}
+        <p>Вы действительно хотите удалить объявление?</p>
+        {{ form }}
+        <p class="form-buttons">
+			<input type="submit" class="btn btn-primary" value="Удалить">
+			<a href="{% url 'announcement_detail' object.pk %}" class="btn btn-outline">Отмена</a>
+		</p>
+    </form>
+
+{% endblock announcement %}
