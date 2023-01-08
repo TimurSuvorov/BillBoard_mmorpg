@@ -4,16 +4,18 @@ from django.core.validators import MinLengthValidator, RegexValidator, MaxLength
 from django.db import models
 from django.urls import reverse
 
+from ckeditor_uploader.fields import RichTextUploadingField
+
 TIMEZONES = list(zip(pytz.all_timezones, pytz.all_timezones))
+
 
 class Announcement(models.Model):
     title = models.CharField(max_length=254,
                              unique=True,
                              db_index=True,
                              verbose_name='Заголовок')
-    content = models.TextField(validators=[MinLengthValidator(4)],
-                               verbose_name='Содержание')
-    #media_content
+    content = RichTextUploadingField(validators=[MinLengthValidator(4)],
+                                     verbose_name='Содержание')
     is_published = models.BooleanField(default=True,
                                        verbose_name='Публикация')
     time_create = models.DateTimeField(auto_now_add=True,

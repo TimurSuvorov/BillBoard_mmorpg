@@ -14,9 +14,16 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
+from django.conf.urls.static import static
+from billboardsite import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('billboard/', include('billboard.urls')),
+    re_path(r'^ckeditor/', include('ckeditor_uploader.urls')),  # The CKEditor path
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)

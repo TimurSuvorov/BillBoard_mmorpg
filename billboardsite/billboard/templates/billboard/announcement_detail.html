@@ -13,20 +13,19 @@
         <h1 class="mb-2">{{ announcement_detail.title }}</h1>
         <div class="meta-wrap">
             <p class="meta">
-              <span style="font-size: 12px;"><i class="icon-face mr-1"></i>Автор: {{ announcement_detail.author_ann }}</span>
-              <span style="font-size: 12px;"><i class="icon-calendar mr-1"></i>{% if isupdated %}Обновлено{% else %}Создано{% endif %}: {{ announcement_detail.time_create|date:'d/m/y H:i' }}</span>
-              <span style="font-size: 12px;"><a href="#"><i class="icon-folder-o mr-1"></i>{{ announcement_detail.category }}</a></span>
-              <span style="font-size: 12px;"><i class="icon-comment2 mr-1" title="Отлики"></i>{{ announcement_detail.replies.all.count }}</span>
+                <span style="font-size: 12px; margin-right: 5px"><i class="icon-face mr-1"></i>Автор: {{ announcement_detail.author_ann }}</span>
+                <span style="font-size: 12px; margin-right: 5px"><i class="icon-calendar mr-1"></i>{% if isupdated %}Обновлено{% else %}Создано{% endif %}: {{ announcement_detail.time_create|date:'d/m/y H:i' }}</span>
+                <span style="font-size: 12px; margin-right: 5px"><a href="#"><i class="icon-folder-o mr-1"></i>{{ announcement_detail.category }}</a></span>
+                <span style="font-size: 12px; margin-right: 5px"><i class="icon-comment2 mr-1" title="Отлики"></i>{{ announcement_detail.replies.all.count }}</span>
+            {% if request.user == announcement_detail.author_ann %}
+            <p>
+                <span style="font-size: 12px"><a href="{% url 'announcement_edit' announcement_detail.pk %}" style="color: green"><i class="icon-edit"></i>Изменить</a></span>
+                <span style="font-size: 12px; margin-left: 5px;"><a href="{% url 'announcement_delete' announcement_detail.pk %}" style="color: red"><i class="icon-remove"></i>Удалить</a></span>
+            </p>
+            {% endif %}
             </p>
             <hr>
         </div>
     </div>
-    <p>{{ announcement_detail.content|linebreaks }}</p>
-    {% if request.user == announcement_detail.author_ann %}
-        <hr>
-        <p class="form-buttons">
-            <a href="{% url 'announcement_edit' announcement_detail.pk %}" class="btn btn-primary">Изменить</a>
-            <a href="{% url 'announcement_delete' announcement_detail.pk %}" class="btn btn-outline-dark">Удалить</a>
-        </p>
-    {% endif %}
+    <p>{{ announcement_detail.content|safe|linebreaks }}</p>
 {% endblock announcement %}

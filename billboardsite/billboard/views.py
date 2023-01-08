@@ -22,13 +22,12 @@ def index(request):
 
 class AnnouncementList(ListView):
     model = Announcement
-    ordering = '-time_update', '-time_create'
     context_object_name = 'all_announcement'
     template_name = 'billboard/announcement_list.html'
     paginate_by = 6
 
     def get_queryset(self):
-        queryset = Announcement.objects.filter(is_published=True)
+        queryset = Announcement.objects.filter(is_published=True).order_by('-time_create', '-time_update')
         return queryset
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -46,6 +45,7 @@ class AnnouncementDetail(DetailView):
         context = super().get_context_data()
         context['category_selected'] = self.object.category.id
         return context
+
 
 class AnnouncementCreate(CreateView):
     model = Announcement
@@ -78,7 +78,7 @@ class AnnouncementDelete(DeleteView):
 
 class CategoryListView(ListView):
     model = Announcement
-    ordering = '-time_update, -time_create'
+    ordering = ['-time_update']
     template_name = 'billboard/announcement_by_category.html'
     context_object_name = 'category_announcement'
 

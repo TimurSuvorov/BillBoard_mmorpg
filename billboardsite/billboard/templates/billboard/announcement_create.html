@@ -1,7 +1,7 @@
 {% extends 'flatpages/base.html' %}
 
 {% load static %}
-
+{% load crispy_forms_tags %}
 
 {% block title %}
     Новое объявление
@@ -13,13 +13,29 @@
         <h1 class="mb-2">Новое объявление</h1>
     </div>
 
-    <form action="" method="post">{% csrf_token %}
-        <div class="form-error">{{ form.non_field_errors }}</div>
-        {% for form_field in form %}
-            <p><label class="form-label" for="{{ form_field.id_for_label }}">{{ form_field.label}}: </label>{{ form_field }}</p>
-            <div class="form-error">{{ form_field.errors }}</div>
-        {% endfor %}
-        <input type="submit" value='Создать'>
-    </form>
+<div class="container mt-5">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.media}}
+            {% for field in form %}
+            <div class="form-group">
+                <div><label for="{{ field.id_for_label }}" class="text-dark">{{ field.label }}: </label></div>
+                {{ field }}
+            </div>
+            {% endfor %}
+            <div class="row justify-content-center">
+                <input type="submit" class="btn btn-info btn-sm" value="Создать" />
+            </div>
+        </form>
+</div>
+
+{#    <form action="" method="post">{% csrf_token %}#}
+{#        <div class="form-error">{{ form.non_field_errors }}</div>#}
+{#        {% for form_field in form %}#}
+{#            <p><label class="form-label" for="{{ form_field.id_for_label }}">{{ form_field.label}}: </label>{{ form_field }}</p>#}
+{#            <div class="form-error">{{ form_field.errors }}</div>#}
+{#        {% endfor %}#}
+{#        <input type="submit" value='Создать'>#}
+{#    </form>#}
 
 {% endblock announcement %}

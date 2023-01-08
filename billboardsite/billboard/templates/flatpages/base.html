@@ -93,7 +93,7 @@
                           {% if category_selected == category.pk %}
                           <li><a style="color: #1eafed; font-family: Lora, Arial, serif">{{ category }}<span>({{ category.cat_announcements.all.count }})</span></a></li>
                       {% else %}
-                          <li><a style="font-family: Lora, Arial, serif"href="{% url 'announcement_by_category' pk=category.pk %}">{{ category }}<span>({{ category.cat_announcements.all.count }})</span></a></li>
+                          <li><a style="font-family: Lora, Arial, serif" href="{% url 'announcement_by_category' pk=category.pk %}">{{ category }}<span>({{ category.cat_announcements.all.count }})</span></a></li>
                       {% endif %}
                   {% endfor %}
 	              </ul>
