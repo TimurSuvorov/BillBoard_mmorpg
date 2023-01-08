@@ -44,6 +44,7 @@ class AnnouncementDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         context['category_selected'] = self.object.category.id
+        context['replies'] = self.object.replies.all()
         return context
 
 
