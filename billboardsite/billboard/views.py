@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
+from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy, reverse
 from django.views.generic.edit import FormMixin
 from pprint import pprint
@@ -13,8 +14,6 @@ from billboard.custom_mixins import OwnerOrAdminAnnouncePermissionCheck
 from billboard.forms import AnnouncementForm, ReplyForm
 from billboard.models import Announcement, Category, Reply
 
-
-# Create your views here.
 
 def index(request):
     return render(request, 'billboard/index.html')
@@ -60,12 +59,11 @@ class AnnouncementDetail(DetailView, FormMixin):
         # Запрет на отклик к своим же постам
         if self.request.user == announcement.author_ann:
             raise PermissionDenied('reply_for_yourself')
-
-        self.myform = form.save(commit=False)
-        self.myform.announcement = announcement
-        self.myform.author_repl = self.request.user
-        self.myform.announcement.count_replies()
+        form.instance = form.save(commit=False)
+        form.instance.announcement = announcement
+        form.instance.author_repl = self.request.user
         form.save()
+        announcement.count_replies()
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -107,8 +105,15 @@ class ReplyDelete(DeleteView):
 
     def get_success_url(self):
         announcement = self.object.announcement
-        print(announcement)
         return reverse('announcement_detail', kwargs={'pk': announcement.pk})
+
+    def form_valid(self, form):
+        announcement = self.object.announcement
+        success_url = self.get_success_url()
+        self.object.delete()
+        announcement.count_replies()
+        return HttpResponseRedirect(success_url)
+
 
 # class ReplyCreate(CreateView):
 #     model = Reply

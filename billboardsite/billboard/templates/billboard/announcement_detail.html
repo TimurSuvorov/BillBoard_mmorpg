@@ -27,8 +27,9 @@
             <hr>
         </div>
     </div>
-    <p>{{ announcement_detail.content|safe|linebreaks }}</p>
-
+    <div style="padding-left: 20px">
+        {{ announcement_detail.content|safe|linebreaks }}
+    </div>
 <!-- START replies-list -->
     <div class="pt-5 mt-5">
         <h5 class="mb-5 font-weight-bold">Всего откликов: {{ announcement_detail.num_replies }}</h5>
