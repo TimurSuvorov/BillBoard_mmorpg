@@ -1,0 +1,25 @@
+{% extends 'flatpages/base.html' %}
+
+{% load static %}
+
+
+{% block title %}
+    Удаление отлика
+{% endblock title %}
+
+
+{% block announcement %}
+    <div class="col-md-12">
+        <h1 class="mb-2">Удаление отлика «{{ object|truncatechars:40 }}»</h1>
+    </div>
+
+    <form method="post">{% csrf_token %}
+        <p>Вы действительно хотите удалить отлик?</p>
+        {{ form }}
+        <p class="form-buttons">
+			<input type="submit" class="btn btn-outline-danger btn-sm" value="Удалить">
+			<a href="{% url 'announcement_detail' object.announcement.pk %}" class="btn btn-primary btn-sm">Отмена</a>
+		</p>
+    </form>
+
+{% endblock announcement %}

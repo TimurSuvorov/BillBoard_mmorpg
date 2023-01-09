@@ -39,10 +39,10 @@ class Announcement(models.Model):
     def get_absolute_url(self):
         return reverse('announcement_detail', kwargs={'pk': self.pk})
 
-    @property
     def count_replies(self):
-        replies_num = self.reply_set.all().count()
+        replies_num = self.replies.all().count()
         self.num_replies = replies_num
+        self.save()
         return replies_num
 
     class Meta:
@@ -99,7 +99,6 @@ class Newsletter(models.Model):
                              verbose_name='Заголовок')
     text_content = models.TextField(validators=[MinLengthValidator(4)],
                                     verbose_name='Содержание(текст)')
-    # media_content
     category = models.ForeignKey(to='Category',
                                  on_delete=models.CASCADE,
                                  related_name='cat_newsletters',

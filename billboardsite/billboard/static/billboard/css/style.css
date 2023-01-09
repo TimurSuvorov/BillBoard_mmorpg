@@ -7295,7 +7295,7 @@ button.bg-dark:focus {
   .px-md-4 {
     padding-left: 1.5rem !important; }
   .p-md-5 {
-    padding: 3rem !important; }
+    padding: 1rem !important; }
   .pt-md-5,
   .py-md-5 {
     padding-top: 3rem !important; }
@@ -9058,9 +9058,9 @@ textarea.form-control {
         font-size: 20px; }
       .comment-list li .comment-body .meta {
         text-transform: uppercase;
-        font-size: 13px;
+        font-size: 11px;
         letter-spacing: .1em;
-        color: #ccc; }
+        color: #c0c0c0; }
       .comment-list li .comment-body .reply {
         padding: 5px 10px;
         background: #e6e6e6;

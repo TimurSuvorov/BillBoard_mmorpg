@@ -28,57 +28,55 @@
         </div>
     </div>
     <p>{{ announcement_detail.content|safe|linebreaks }}</p>
+
 <!-- START replies-list -->
     <div class="pt-5 mt-5">
-        <h4 class="mb-5 font-weight-bold">Всего откликов: {{ announcement_detail.num_replies }}</h4>
+        <h5 class="mb-5 font-weight-bold">Всего откликов: {{ announcement_detail.num_replies }}</h5>
         <ul class="comment-list">
             {% for reply in replies %}
               <li class="comment">
-    		                        <div class="vcard bio">
-    		                          <img src="{% static 'billboard/images/person_1.jpg' %}" alt="Image placeholder">
-    		                        </div>
+                    <div class="vcard bio">
+                      <img src="{% static 'billboard/images/person_1.jpg' %}" alt="Image placeholder">
+                    </div>
                 <div class="comment-body">
                   <h5>{{ reply.author_repl }}</h5>
                   <div class="meta">{{ reply.time_update|date:'d.m.y H:i' }}</div>
                   <p>{{ reply.content }}</p>
-                  <p><a href="#" class="reply">Reply</a></p>
+                  {% if request.user == reply.author_repl %}
+                    <p><a href="{% url 'reply_delete' pk=reply.pk %}" class="reply">Удалить</a></p>
+                  {% elif request.user == announcement_detail.author_ann and request.user != reply.author_repl %}
+                    <p>
+                       <a href="#" class="reply">Принять</a>
+                       <a href="#" class="reply">Отклонить</a>
+                    </p>
+                  {% endif %}
                 </div>
               </li>
             {% empty %}
                 <div class="comment-body">
-                  <h3>Здесь нет пока отликов</h3>
+                  <p>Здесь нет пока отликов</p>
                 </div>
             {% endfor %}
 
 		              </ul>
 <!-- END replies-list -->
 
-		              <div class="comment-form-wrap pt-5">
-		                <h3 class="mb-5">Leave a comment</h3>
-		                <form action="#" class="p-3 p-md-5 bg-light">
-		                  <div class="form-group">
-		                    <label for="name">Name *</label>
-		                    <input type="text" class="form-control" id="name">
-		                  </div>
-		                  <div class="form-group">
-		                    <label for="email">Email *</label>
-		                    <input type="email" class="form-control" id="email">
-		                  </div>
-		                  <div class="form-group">
-		                    <label for="website">Website</label>
-		                    <input type="url" class="form-control" id="website">
-		                  </div>
+<!-- START newreplies-form -->
+          <div class="comment-form-wrap pt-5">
+            <h3 class="mb-5">Оставьте отлик</h3>
+            <div class="form-error">{{ form.non_field_errors }}</div>
+            <form action="#" class="p-3 p-md-5 bg-light" method="post">{% csrf_token %}
+              <div class="form-group">
+                <label for="{{ form.content.id_for_label }}">{{form.content.label}}</label>
+                  {{ form.content }}
+                  <div class="form-error">{{ form.errors }}</div>
+              </div>
+              <div class="form-group">
+                <input type="submit" value="Опубликовать отклик" class="btn py-3 px-4 btn-primary btn-sm">
+              </div>
 
-		                  <div class="form-group">
-		                    <label for="message">Message</label>
-		                    <textarea name="" id="message" cols="30" rows="10" class="form-control"></textarea>
-		                  </div>
-		                  <div class="form-group">
-		                    <input type="submit" value="Post Comment" class="btn py-3 px-4 btn-primary">
-		                  </div>
-
-		                </form>
-		              </div>
-		            </div>
-
+            </form>
+          </div>
+        </div>
+<!-- END newreplies-form -->
 {% endblock announcement %}
