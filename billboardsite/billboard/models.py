@@ -70,6 +70,13 @@ class Category(models.Model):
 
 
 class Reply(models.Model):
+    APPROVE_STATUS = [
+        ('approved', 'Принят'),
+        ('declained', 'Отклонен'),
+        ('no_status', 'Без статуса')
+    ]
+
+
     announcement = models.ForeignKey(to=Announcement,
                                      related_name='replies',
                                      on_delete=models.CASCADE)
@@ -79,6 +86,11 @@ class Reply(models.Model):
                                        verbose_name='Дата создания')
     time_update = models.DateTimeField(auto_now=True,
                                        verbose_name='Дата редактирования')
+    is_approved = models.CharField(max_length=16,
+                                   choices=APPROVE_STATUS,
+                                   default='no_status',
+                                   verbose_name='Одобрение'
+                                   )
     author_repl = models.ForeignKey(to=User,
                                     on_delete=models.SET('Lost(deleted) Stranger'),
                                     related_name='auth_replies',

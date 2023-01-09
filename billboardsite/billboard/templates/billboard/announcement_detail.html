@@ -29,6 +29,7 @@
     </div>
     <div style="padding-left: 20px">
         {{ announcement_detail.content|safe|linebreaks }}
+        <hr>
     </div>
 <!-- START replies-list -->
     <div class="pt-5 mt-5">
@@ -47,8 +48,15 @@
                     <p><a href="{% url 'reply_delete' pk=reply.pk %}" class="reply">Удалить</a></p>
                   {% elif request.user == announcement_detail.author_ann and request.user != reply.author_repl %}
                     <p>
-                       <a href="#" class="reply">Принять</a>
-                       <a href="#" class="reply">Отклонить</a>
+                    {% if reply.is_approved != 'approved' %}
+                       <a href="{% url 'reply_approve' pk=reply.pk %}" class="reply" style="background: #c0f6c9">Принять</a>
+                    {% endif %}
+                    {% if reply.is_approved != 'declained' %}
+                       <a href="{% url 'reply_declain' pk=reply.pk %}" class="reply" style="background: #f6dbc0">Отклонить</a>
+                    {% endif %}
+                    {% if reply.is_approved != 'no_status' %}
+                       <a href="{% url 'reply_reset' pk=reply.pk %}" class="reply">Сбросить</a>
+                    {% endif %}
                     </p>
                   {% endif %}
                 </div>
@@ -64,11 +72,10 @@
 
 <!-- START newreplies-form -->
           <div class="comment-form-wrap pt-5">
-            <h3 class="mb-5">Оставьте отлик</h3>
+            <h5 class="mb-5">Оставьте отлик</h5>
             <div class="form-error">{{ form.non_field_errors }}</div>
             <form action="#" class="p-3 p-md-5 bg-light" method="post">{% csrf_token %}
               <div class="form-group">
-                <label for="{{ form.content.id_for_label }}">{{form.content.label}}</label>
                   {{ form.content }}
                   <div class="form-error">{{ form.errors }}</div>
               </div>

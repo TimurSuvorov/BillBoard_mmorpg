@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'ckeditor',  # CKEditor config
     'ckeditor_uploader',  # CKEditor media uploader
+    'django_filters',
 ]
 
 

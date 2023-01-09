@@ -2478,7 +2478,7 @@ fieldset:disabled a.btn {
 .btn-sm, .btn-group-sm > .btn {
   padding: 0.25rem 0.5rem;
   font-size: 0.875rem;
-  line-height: 1.5;
+  line-height: 0.5;
   border-radius: 0.2rem; }
 
 .btn-block {
@@ -6643,7 +6643,7 @@ button.bg-dark:focus {
 
 .mt-5,
 .my-5 {
-  margin-top: 3rem !important; }
+  margin-top: 1rem !important; }
 
 .mr-5,
 .mx-5 {
@@ -6651,7 +6651,7 @@ button.bg-dark:focus {
 
 .mb-5,
 .my-5 {
-  margin-bottom: 3rem !important; }
+  margin-bottom: 1rem !important; }
 
 .ml-5,
 .mx-5 {
@@ -8203,7 +8203,7 @@ h1, h2, h3, h4, h5,
   border-right: 1px solid #e6e6e6; }
   @media (min-width: 992px) {
     #colorlib-aside {
-      width: 25%; } }
+      width: 20%; } }
   @media (max-width: 991.98px) {
     #colorlib-aside {
       width: 320px;
@@ -8370,7 +8370,7 @@ h1, h2, h3, h4, h5,
   transition: all 0.5s ease; }
   @media (min-width: 992px) {
     #colorlib-main {
-      width: 75%; } }
+      width: 80%; } }
 
 .colorlib-nav-toggle {
   cursor: pointer;
@@ -9066,7 +9066,7 @@ textarea.form-control {
         background: #e6e6e6;
         color: #000000;
         text-transform: uppercase;
-        font-size: 11px;
+        font-size: 10px;
         letter-spacing: .1em;
         font-weight: 400;
         border-radius: 4px; }

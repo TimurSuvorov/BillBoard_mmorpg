@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpRequest, QueryDict
 from django.urls import reverse_lazy, reverse
 from django.views.generic.edit import FormMixin
 from pprint import pprint
@@ -11,6 +11,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib import messages
 
 from billboard.custom_mixins import OwnerOrAdminAnnouncePermissionCheck
+from billboard.filters import AnnouncementFilter
 from billboard.forms import AnnouncementForm, ReplyForm
 from billboard.models import Announcement, Category, Reply
 
@@ -26,12 +27,15 @@ class AnnouncementList(ListView):
     paginate_by = 6
 
     def get_queryset(self):
-        queryset = Announcement.objects.filter(is_published=True).order_by('-time_create', '-time_update')
-        return queryset
+        self.queryset = Announcement.objects.filter(is_published=True).order_by('-time_update')
+        self.filtered_queryset = AnnouncementFilter(self.request.GET, self.queryset)
+        print(self.request.GET)
+        return self.filtered_queryset.qs
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data()
         context['list_selected'] = 1
+        context['filtered_queryset'] = self.filtered_queryset
         return context
 
 
@@ -142,3 +146,26 @@ class CategoryListView(ListView):
         context['category'] = self.category
         context['category_selected'] = self.kwargs['pk']
         return context
+
+
+def reply_approve(request, pk):
+    reply_object = Reply.objects.get(pk=pk)
+    reply_object.is_approved = 'approved'
+    announcement_pk = reply_object.announcement.pk
+    reply_object.save()
+    return HttpResponseRedirect(reverse('announcement_detail', kwargs={'pk': announcement_pk}))
+
+
+def reply_declain(request, pk):
+    reply_object = Reply.objects.get(pk=pk)
+    reply_object.is_approved = 'declained'
+    announcement_pk = reply_object.announcement.pk
+    reply_object.save()
+    return HttpResponseRedirect(reverse('announcement_detail', kwargs={'pk': announcement_pk}))
+
+def reply_reset(request, pk):
+    reply_object = Reply.objects.get(pk=pk)
+    reply_object.is_approved = 'no_status'
+    announcement_pk = reply_object.announcement.pk
+    reply_object.save()
+    return HttpResponseRedirect(reverse('announcement_detail', kwargs={'pk': announcement_pk}))
