@@ -1,12 +1,16 @@
 {% extends 'flatpages/base.html' %}
 
 {% load static %}
+{% load custom_tags %}
 {% load crispy_forms_tags %}
 
 {% block title %}
     Новое объявление
 {% endblock title %}
 
+{% block category %}
+    {% tag_categories_block %}
+{% endblock category %}
 
 {% block announcement %}
     <div class="col-md-12">
@@ -32,13 +36,5 @@
         </form>
 </div>
 
-{#    <form action="" method="post">{% csrf_token %}#}
-{#        <div class="form-error">{{ form.non_field_errors }}</div>#}
-{#        {% for form_field in form %}#}
-{#            <p><label class="form-label" for="{{ form_field.id_for_label }}">{{ form_field.label}}: </label>{{ form_field }}</p>#}
-{#            <div class="form-error">{{ form_field.errors }}</div>#}
-{#        {% endfor %}#}
-{#        <input type="submit" value='Создать'>#}
-{#    </form>#}
-
 {% endblock announcement %}
+

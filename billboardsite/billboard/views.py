@@ -5,13 +5,13 @@ from django.http import HttpResponseRedirect, HttpRequest, QueryDict
 from django.urls import reverse_lazy, reverse
 from django.views.generic.edit import FormMixin
 from pprint import pprint
-
+from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib import messages
 
 from billboard.custom_mixins import OwnerOrAdminAnnouncePermissionCheck
-from billboard.filters import AnnouncementFilter
+from billboard.filters import AnnouncementFilter, ReplyFilter
 from billboard.forms import AnnouncementForm, ReplyForm
 from billboard.models import Announcement, Category, Reply
 
@@ -34,7 +34,7 @@ class AnnouncementList(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data()
-        context['list_selected'] = 1
+        context['announcement_list_selected'] = 1
         context['filtered_queryset'] = self.filtered_queryset
         return context
 
@@ -102,6 +102,37 @@ class AnnouncementDelete(DeleteView):
     template_name = 'billboard/announcement_delete.html'
     success_url = reverse_lazy('announcement_list')
 
+
+class ReplyMyList(ListView):
+    model = Reply
+    context_object_name = 'my_reply'
+    template_name = 'billboard/reply_my_list.html'
+    paginate_by = 6
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data()
+        context['myreply_list_selected'] = 1
+        return context
+
+class AnnWithReplyForMeList(ListView):
+    model = Announcement
+    context_object_name = 'anns_with_reply_forme'
+    template_name = 'billboard/reply_forme_list.html'
+    paginate_by = 6
+
+    def get_queryset(self):
+        self.queryset = Announcement.objects.filter(Q(author_ann__username=self.request.user) &
+                                                    Q(num_replies__gt=0) &
+                                                    Q(is_published__gt=0)
+                                                    ).order_by('-time_update')
+        self.filtered_queryset = ReplyFilter(self.request.GET, self.queryset)
+        return self.filtered_queryset.qs
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data()
+        context['reply_forme_list_selected'] = 1
+        context['filtered_queryset'] = self.filtered_queryset
+        return context
 
 class ReplyDelete(DeleteView):
     model = Reply

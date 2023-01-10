@@ -1,0 +1,14 @@
+
+
+<div class="sidebar-box ftco-animate">
+    <h3 class="sidebar-heading" style="margin-top: 30px">Категории</h3>
+  <ul class="categories">
+  {% for category in categories %}
+          {% if category_selected == category.pk %}
+          <li><a style="color: #1eafed; font-family: Lora, Arial, serif">{{ category }}<span>({{ category.cat_announcements.all.count }})</span></a></li>
+      {% else %}
+          <li><a style="font-family: Lora, Arial, serif" href="{% url 'announcement_by_category' pk=category.pk %}">{{ category }}<span>({{ category.cat_announcements.all.count }})</span></a></li>
+      {% endif %}
+  {% endfor %}
+  </ul>
+</div>

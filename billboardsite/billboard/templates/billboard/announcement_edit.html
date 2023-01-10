@@ -1,12 +1,15 @@
 {% extends 'flatpages/base.html' %}
 
 {% load static %}
-
+{% load custom_tags %}
 
 {% block title %}
     Редактирование объявления
 {% endblock title %}
 
+{% block category %}
+    {% tag_categories_block %}
+{% endblock category %}
 
 {% block announcement %}
     <div class="col-md-12">

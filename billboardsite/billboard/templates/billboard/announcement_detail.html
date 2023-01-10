@@ -1,12 +1,16 @@
 {% extends 'flatpages/base.html' %}
 
 {% load static %}
-
+{% load custom_tags %}
+{% load custom_filters %}
 
 {% block title %}
     {{ announcement_detail.title|truncatechars:50 }}
 {% endblock title %}
 
+{% block category %}
+    {% tag_categories_block %}
+{% endblock category %}
 
 {% block announcement %}
     <div class="col-md-12">
@@ -39,10 +43,13 @@
               <li class="comment">
                     <div class="vcard bio">
                       <img src="{% static 'billboard/images/person_1.jpg' %}" alt="Image placeholder">
+
                     </div>
                 <div class="comment-body">
-                  <h5>{{ reply.author_repl }}</h5>
-                  <div class="meta">{{ reply.time_update|date:'d.m.y H:i' }}</div>
+                  <h5 style="margin-bottom: 0">{{ reply.author_repl }}</h5>
+                  <div class="meta">{{ reply.time_update|date:'d.m.y H:i' }}
+                      <i class="icon-publish" style='color: black; font-size: 11px; font-family: "Poppins", Arial, sans-serif '>Статус: {{ reply.is_approved|status_translate }}</i>
+                  </div>
                   <p>{{ reply.content }}</p>
                   {% if request.user == reply.author_repl %}
                     <p><a href="{% url 'reply_delete' pk=reply.pk %}" class="reply">Удалить</a></p>
@@ -71,6 +78,7 @@
 <!-- END replies-list -->
 
 <!-- START newreplies-form -->
+    {% if request.user != announcement_detail.author_ann %}
           <div class="comment-form-wrap pt-5">
             <h5 class="mb-5">Оставьте отлик</h5>
             <div class="form-error">{{ form.non_field_errors }}</div>
@@ -85,6 +93,9 @@
 
             </form>
           </div>
+    {% endif %}
+    <!-- END newreplies-form -->
+
         </div>
-<!-- END newreplies-form -->
 {% endblock announcement %}
+

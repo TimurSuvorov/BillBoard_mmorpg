@@ -14,6 +14,8 @@ urlpatterns = [
     path('replies/<int:pk>/approve', reply_approve, name='reply_approve'),
     path('replies/<int:pk>/declain', reply_declain, name='reply_declain'),
     path('replies/<int:pk>/reset', reply_reset, name='reply_reset'),
+    # path('replies/my', AnnWithReplyForMeList.as_view(), name='reply_my_list'),
+    path('replies/forme', AnnWithReplyForMeList.as_view(), name='reply_forme_list'),
 ]
 
 

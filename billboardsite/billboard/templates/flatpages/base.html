@@ -41,22 +41,30 @@
 		<aside id="colorlib-aside" role="complementary" class="js-fullheight">
 			<nav id="colorlib-main-menu" role="navigation">
 				<ul>
-					<li {% if list_selected %}
+					<li {% if announcement_list_selected %}
                             class="colorlib-active"><a href="{% url 'announcement_list' %}">
                         {% else %}
                             ><a href="{% url 'announcement_list' %}">
                         {% endif %}Все объявления</a>
                     </li>
 
-					<li><a href="fashion.html">Fashion</a></li>
-					<li><a href="travel.html">Travel</a></li>
-					<li><a href="about.html">About</a></li>
-					<li><a href="contact.html">Contact</a></li>
+					<li {% if reply_forme_list_selected %}
+                            class="colorlib-active"><a href="{% url 'reply_forme_list' %}">
+                        {% else %}
+                            ><a href="{% url 'reply_forme_list' %}">
+                        {% endif %}Отлики для меня</a>
+                    </li>
+{#                    <li {% if myreply_list_selected %}#}
+{#                            class="colorlib-active"><a href="{% url 'reply_my_list' %}">#}
+{#                        {% else %}#}
+{#                            ><a href="{% url 'reply_my_list' %}">#}
+{#                        {% endif %}Мои отлики</a>#}
+{#                    </li>#}
 				</ul>
 			</nav>
 
 			<div class="colorlib-footer">
-				<h1 id="colorlib-logo" class="mb-4"><a href="base.html" style="background-image: url({% static 'billboard/images/bg_1.jpg' %});">Play&<span>Win</span></a></h1>
+				<h1 id="colorlib-logo" class="mb-4"><a href="{% url 'announcement_list' %}" style="background-image: url({% static 'billboard/images/bg_1.jpg' %});">Play&<span>Win</span></a></h1>
 			</div>
 		</aside> <!-- END COLORLIB-ASIDE -->
 		<div id="colorlib-main">
@@ -80,18 +88,8 @@
 	    			<div class="col-xl-4 sidebar ftco-animate bg-light pt-5">
 
                             <!-- CATEGORY START -->
-	            <div class="sidebar-box ftco-animate">
-	            	<h3 class="sidebar-heading">Категории</h3>
-	              <ul class="categories">
-                  {% for category in categories %}
-                          {% if category_selected == category.pk %}
-                          <li><a style="color: #1eafed; font-family: Lora, Arial, serif">{{ category }}<span>({{ category.cat_announcements.all.count }})</span></a></li>
-                      {% else %}
-                          <li><a style="font-family: Lora, Arial, serif" href="{% url 'announcement_by_category' pk=category.pk %}">{{ category }}<span>({{ category.cat_announcements.all.count }})</span></a></li>
-                      {% endif %}
-                  {% endfor %}
-	              </ul>
-	            </div>
+                            {% block category %}
+                            {% endblock category %}
                             <!-- CATEGORY END -->
 
                             <!-- SEARCH START -->

@@ -4,9 +4,12 @@
 {% load custom_tags %}
 
 {% block title %}
-Все объявления
+    Все объявления
 {% endblock title %}
 
+{% block category %}
+    {% tag_categories_block %}
+{% endblock category %}
 
 {% block announcement %}
 
