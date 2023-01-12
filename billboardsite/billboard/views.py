@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect, HttpRequest, QueryDict
 from django.urls import reverse_lazy, reverse
 from django.views.generic.edit import FormMixin
 from pprint import pprint
-from django.db.models import Q
+from django.db.models import Q, Model
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib import messages
@@ -28,8 +28,7 @@ class AnnouncementList(ListView):
 
     def get_queryset(self):
         self.queryset = Announcement.objects.filter(is_published=True).order_by('-time_update')
-        self.filtered_queryset = AnnouncementFilter(self.request.GET, self.queryset)
-        print(self.request.GET)
+        self.filtered_queryset = AnnouncementFilter(self.request.GET, self.queryset, request=self.request)
         return self.filtered_queryset.qs
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -121,11 +120,15 @@ class AnnWithReplyForMeList(ListView):
     paginate_by = 6
 
     def get_queryset(self):
-        self.queryset = Announcement.objects.filter(Q(author_ann__username=self.request.user) &
+        # Фильтруем Мои объявления, где есть отлики
+        self.queryset_ann = Announcement.objects.filter(Q(author_ann__username=self.request.user) &
                                                     Q(num_replies__gt=0) &
                                                     Q(is_published__gt=0)
                                                     ).order_by('-time_update')
-        self.filtered_queryset = ReplyFilter(self.request.GET, self.queryset)
+        # Вытаскиваем по ним категории
+        cat_list = self.queryset_ann.values_list('category__id', flat=True)
+        self.queryset_cat = Category.objects.filter(id__in=cat_list)
+        self.filtered_queryset = ReplyFilter(self.queryset_cat, self.request.GET, self.queryset_ann)
         return self.filtered_queryset.qs
 
     def get_context_data(self, *, object_list=None, **kwargs):

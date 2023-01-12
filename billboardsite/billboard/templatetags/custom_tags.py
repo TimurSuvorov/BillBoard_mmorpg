@@ -14,10 +14,6 @@ def isupdated(pk):
         return True
     return False
 
-@register.simple_tag()
-def get_categories():
-    categories = Category.objects.all()
-    return categories
 
 @register.inclusion_tag('billboard/tags_categories_block.html', takes_context=True, name='tag_categories_block')
 def tag_categories_block(context):

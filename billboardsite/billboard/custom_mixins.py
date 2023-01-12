@@ -10,3 +10,5 @@ class OwnerOrAdminAnnouncePermissionCheck(PermissionRequiredMixin):
             raise PermissionDenied('Вы не являетесь автором этой записи')
         perms = self.get_permission_required()
         return self.request.user.has_perms(perms)
+
+

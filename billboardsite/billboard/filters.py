@@ -1,8 +1,13 @@
 import django_filters
 from django import forms
-from django.db.models import Q
+from django.contrib.auth.models import User
 
-from billboard.models import Announcement, Category
+
+def get_current_user(request):
+    if request is None:
+        return User.objects.none()
+    user = request.user
+    return User.objects.filter(username=user)
 
 
 class AnnouncementFilter(django_filters.FilterSet):
@@ -14,22 +19,29 @@ class AnnouncementFilter(django_filters.FilterSet):
                                                              )
                                       )
 
+    author_ann = django_filters.ModelChoiceFilter(queryset=get_current_user,
+                                                  field_name='author_ann',
+                                                  widget=forms.CheckboxInput(attrs={'onChange': 'this.form.submit()'})
+                                                      )
+
+
+
+
 class ReplyFilter(django_filters.FilterSet):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, queryset_cat, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.filters['title'].queryset = self.queryset
+        self.filters['category'].queryset = queryset_cat
 
     title = django_filters.ModelMultipleChoiceFilter(queryset=None,
                                                      field_name='title',
                                                      lookup_expr='icontains',
-                                                     # widget=forms.MultipleChoiceField(attrs={})
                                                      )
 
 
-
-    category = django_filters.ModelMultipleChoiceFilter(queryset=Category.objects.all(),
+    category = django_filters.ModelMultipleChoiceFilter(queryset=None,
                                                         field_name='category__catname',
-                                                        widget=forms.CheckboxSelectMultiple(attrs={'checked': 'checked'})
+                                                        widget=forms.CheckboxSelectMultiple()
                                                         )
 
 
