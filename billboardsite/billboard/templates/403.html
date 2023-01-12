@@ -48,8 +48,10 @@
 		            <p style="font-size: 30px">
                         {% if exception == 'not_author_of_ann' %}
                             Вы можете редактировать только свои объявления
-                        {% elif exception == 'reply_for_yourself' %}
+                        {% elif exception == 'reply_for_yourself_ann' %}
                             Нельзя оставлять отклики на свои объявления
+                        {% elif exception == 'action_with_yourself_reply' %}
+                            Нельзя принимать/отклонять отлики может только хозяин объявления
                         {% endif %}
                     </p>
 	                    </div>

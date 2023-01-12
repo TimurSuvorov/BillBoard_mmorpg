@@ -52,12 +52,12 @@
                             ><a href="{% url 'reply_forme_list' %}">
                         {% endif %}Отлики для меня</a>
                     </li>
-{#                    <li {% if myreply_list_selected %}#}
-{#                            class="colorlib-active"><a href="{% url 'reply_my_list' %}">#}
-{#                        {% else %}#}
-{#                            ><a href="{% url 'reply_my_list' %}">#}
-{#                        {% endif %}Мои отлики</a>#}
-{#                    </li>#}
+                    <li {% if reply_my_list_selected %}
+                            class="colorlib-active"><a href="{% url 'reply_my_list' %}">
+                        {% else %}
+                            ><a href="{% url 'reply_my_list' %}">
+                        {% endif %}Мои отлики</a>
+                    </li>
 				</ul>
 			</nav>
 
@@ -82,8 +82,8 @@
                                 {% block paginator %}
                                 {% endblock paginator %}
                             <!-- PAGINATOR END -->
-			    	    </div>
-	    			<div class="col-xl-4 sidebar ftco-animate bg-light pt-5">
+                    </div>
+                <div class="col-xl-4 sidebar ftco-animate bg-light pt-5">
 
                             <!-- CATEGORY START -->
                             {% block category %}

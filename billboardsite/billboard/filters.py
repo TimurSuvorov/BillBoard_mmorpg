@@ -36,12 +36,14 @@ class ReplyFilter(django_filters.FilterSet):
     title = django_filters.ModelMultipleChoiceFilter(queryset=None,
                                                      field_name='title',
                                                      lookup_expr='icontains',
+                                                     label='Обьявление',
                                                      )
 
 
     category = django_filters.ModelMultipleChoiceFilter(queryset=None,
                                                         field_name='category__catname',
-                                                        widget=forms.CheckboxSelectMultiple()
+                                                        widget=forms.CheckboxSelectMultiple(),
+                                                        label='Категория',
                                                         )
 
 
