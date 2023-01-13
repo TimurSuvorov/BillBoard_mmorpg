@@ -29,7 +29,9 @@ class AnnouncementList(ListView):
 
     def get_queryset(self):
         self.queryset = Announcement.objects.filter(is_published=True).order_by('-time_update')
-        self.filtered_queryset = AnnouncementFilter(self.request.GET, self.queryset, request=self.request)
+        self.filtered_queryset = AnnouncementFilter(data=self.request.GET,
+                                                    queryset=self.queryset,
+                                                    request=self.request)
         return self.filtered_queryset.qs
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -146,9 +148,9 @@ class ReplyMyList(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         # Берем ВСЕ объявления и где есть МОИ отлики
-        self.reply_my = Reply.objects.filter(author_repl=self.request.user).values_list('announcement', flat=True)
+        self.ann_with_reply_my = Reply.objects.filter(author_repl=self.request.user).values_list('announcement', flat=True)
         self.queryset_ann = Announcement.objects.filter(Q(is_published__gt=0) &
-                                                        Q(pk__in=self.reply_my)
+                                                        Q(pk__in=self.ann_with_reply_my)
                                                         ).order_by('-time_update')
         # Вытаскиваем по ним категории
         cat_list = self.queryset_ann.values_list('category__id', flat=True)
@@ -227,6 +229,5 @@ def reply_reset(request, pk):
     check_perm_reply_action(request, reply)
     reply.is_approved = 'no_status'
     reply.save()
-    print(request.META['HTTP_REFERER'])
     announcement_pk = reply.announcement.pk
     return HttpResponseRedirect(reverse('announcement_detail', kwargs={'pk': announcement_pk}))

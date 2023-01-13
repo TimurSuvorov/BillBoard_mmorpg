@@ -79,8 +79,10 @@
             {{ filtered_queryset.form.title }}
         </div>
       {% if request.user.is_authenticated %}
-        <div style="margin-top: 30px">
-            <p><label class="form-label" for="{{ filtered_queryset.form.author_ann.id_for_label }}">Мои объявления: </label> &nbsp;{{ filtered_queryset.form.author_ann }}</p>
+        <div style="margin-top: 30px; font-size: 14px;">
+            <p><label class="form-label" for="{{ filtered_queryset.form.is_author_ann.id_for_label }}">Мои объявления: </label> &nbsp;
+                {{ filtered_queryset.form.is_author_ann }}
+            </p>
         </div>
       {% endif %}
       </form>

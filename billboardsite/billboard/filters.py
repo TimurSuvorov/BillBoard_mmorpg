@@ -13,6 +13,11 @@ def get_current_user(request):
 
 
 class AnnouncementFilter(django_filters.FilterSet):
+
+    def __init__(self, request, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.request = request
+
     title = django_filters.CharFilter(field_name='title',
                                       lookup_expr='icontains',
                                       widget=forms.TextInput(attrs={'type': 'search',
@@ -21,16 +26,19 @@ class AnnouncementFilter(django_filters.FilterSet):
                                                              )
                                       )
 
-    author_ann = django_filters.ModelChoiceFilter(queryset=get_current_user,
-                                                  field_name='author_ann',
-                                                  widget=forms.RadioSelect(attrs={'onChange': 'this.form.submit()',
-                                                                                  'label.text': ''})
+    is_author_ann = django_filters.BooleanFilter(field_name='author_ann',
+                                                 method='ann_by_author',
+                                                 widget=forms.CheckboxInput(attrs={'onChange': 'this.form.submit()'})
                                                  )
 
+    def ann_by_author(self, queryset, name, value):
+        if value:  # Значение True или False из CheckboxInput()
+            return queryset.filter(author_ann__username=self.request.user)
+        return queryset
 
     class Meta:
         model = Announcement
-        fields = ['title', 'author_ann']
+        fields = ['title']
 
 
 class ReplyFilter(django_filters.FilterSet):
@@ -42,9 +50,8 @@ class ReplyFilter(django_filters.FilterSet):
     title = django_filters.ModelMultipleChoiceFilter(queryset=None,
                                                      field_name='title',
                                                      lookup_expr='icontains',
-                                                     label='Обьявление',
+                                                     label='Обяявление',
                                                      )
-
 
     category = django_filters.ModelMultipleChoiceFilter(queryset=None,
                                                         field_name='category__catname',
@@ -52,5 +59,7 @@ class ReplyFilter(django_filters.FilterSet):
                                                         label='Категория',
                                                         )
 
-
+    class Meta:
+        model = Announcement
+        fields = ['title', 'category']
 
