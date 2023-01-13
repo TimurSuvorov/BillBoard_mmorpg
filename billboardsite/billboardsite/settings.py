@@ -47,12 +47,21 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+
+    'billboard.apps.BillboardConfig',
+
+    'django.contrib.sites',
     'django.contrib.staticfiles',
-    'billboard',
     'crispy_forms',
-    'ckeditor',  # CKEditor config
-    'ckeditor_uploader',  # CKEditor media uploader
+    'ckeditor',
+    'ckeditor_uploader',
     'django_filters',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.vk',
+    'allauth.socialaccount.providers.yandex',
+
 ]
 
 
@@ -82,6 +91,11 @@ TEMPLATES = [
             ],
         },
     },
+]
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 WSGI_APPLICATION = 'billboardsite.wsgi.application'
@@ -215,3 +229,28 @@ CKEDITOR_CONFIGS = {
         ]),
     }
 }
+
+# Common authorization setting
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
+
+# Additional authorization setting
+ACCOUNT_EMAIL_SUBJECT_PREFIX = '[MMORPG Billboard]'
+# ACCOUNT_FORMS = {"signup": "accounts.forms.CustomSignUpFromallauth"}
+LOGIN_REDIRECT_URL = '/billboard/announcements/'
+LOGOUT_REDIRECT_URL = '/billboard/announcements/'
+
+# SMTP Yandex setting
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = os.getenv('yandex_EMAIL_HOST_USER')  # имя пользователя
+EMAIL_HOST_PASSWORD = os.getenv("yandex_EMAIL_HOST_PASSWORD")  # пароль от почты
+EMAIL_USE_SSL = True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER + '@yandex.ru'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+

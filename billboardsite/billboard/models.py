@@ -27,7 +27,7 @@ class Announcement(models.Model):
                                  related_name='cat_announcements',
                                  verbose_name='Категория')
     author_ann = models.ForeignKey(to=User,
-                                   on_delete=models.SET('Lost(deleted) Stranger'),
+                                   on_delete=models.CASCADE,
                                    related_name='auth_announcements',
                                    verbose_name='Автор объявлений')
 
@@ -35,6 +35,9 @@ class Announcement(models.Model):
 
     def __str__(self):
         return f'{self.title}'
+
+    def announcement_preview(self):
+        return f'{self.title[:40]}...'
 
     def get_absolute_url(self):
         return reverse('announcement_detail', kwargs={'pk': self.pk})
@@ -97,7 +100,10 @@ class Reply(models.Model):
                                     verbose_name='Автор отликов')
 
     def __str__(self):
-        return f'{self.content[:15]}'
+        return f'{self.content[:15]}...'
+
+    def reply_preview(self):
+        return f'{self.content[:40]}...'
 
     class Meta:
         verbose_name = 'Отлик'

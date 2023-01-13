@@ -59,6 +59,14 @@
 		              </ul>
                 </div>
 <!-- END replies-list -->
+    {% empty %}
+        <div class="col-md-12">
+            <div class="blog-entry ftco-animate d-md-flex">
+                <div class="text text-2 pl-md-4">
+                    <h3 class="mb-2">Для вас отликов пока никто не оставил</h3>
+                </div>
+            </div>
+        </div>
     {% endfor %}
 <!-- END newreplies-form -->
 
@@ -90,18 +98,20 @@
 {% endblock paginator %}
 
 {% block searchbox %}
-<div class="sidebar-box pt-md-4">
-  <form action="#" class="search-form" method="get">
-    <fieldset>
-        <legend class="filtered">Фильтры:</legend>
-        <p><label class="form-label" for="{{ filtered_queryset.form.title.id_for_label }}">Объявление: </label>{{ filtered_queryset.form.title }}</p>
-        <div class="form-error">{{ field.errors }}</div>
-        <p><label class="form-label" for="{{ filtered_queryset.form.category.id_for_label }}">Категории: </label>{{ filtered_queryset.form.category }}</p>
-        <div class="form-error">{{ field.errors }}</div>
-        <div>
-            <button type="submit">Фильтровать</button>
+    {% if anns_with_reply_forme %}
+        <div class="sidebar-box pt-md-4">
+          <form action="#" class="search-form" method="get">
+            <fieldset>
+                <legend class="filtered">Фильтры:</legend>
+                <p><label class="form-label" for="{{ filtered_queryset.form.title.id_for_label }}">Объявление: </label>{{ filtered_queryset.form.title }}</p>
+                <div class="form-error">{{ field.errors }}</div>
+                <p><label class="form-label" for="{{ filtered_queryset.form.category.id_for_label }}">Категории: </label>{{ filtered_queryset.form.category }}</p>
+                <div class="form-error">{{ field.errors }}</div>
+                <div>
+                    <button type="submit">Фильтровать</button>
+                </div>
+            </fieldset>
+          </form>
         </div>
-    </fieldset>
-  </form>
-</div>
+    {% endif %}
 {% endblock searchbox %}

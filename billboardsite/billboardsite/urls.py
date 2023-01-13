@@ -21,7 +21,8 @@ from billboardsite import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('billboard/', include('billboard.urls')),
-    re_path(r'^ckeditor/', include('ckeditor_uploader.urls')),  # The CKEditor path
+    re_path(r'^ckeditor/', include('ckeditor_uploader.urls')),
+    path('accounts/', include('allauth.urls')),
 ]
 
 if settings.DEBUG:

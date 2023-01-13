@@ -51,6 +51,14 @@
 		              </ul>
                 </div>
 <!-- END replies-list -->
+    {% empty %}
+        <div class="col-md-12">
+            <div class="blog-entry ftco-animate d-md-flex">
+                <div class="text text-2 pl-md-4">
+                    <h3 class="mb-2">У вас пока нет отликов</h3>
+                </div>
+            </div>
+        </div>
     {% endfor %}
 <!-- END newreplies-form -->
 
@@ -82,15 +90,17 @@
 {% endblock paginator %}
 
 {% block searchbox %}
-<div class="sidebar-box pt-md-4">
-  <form action="#" class="search-form" method="get">
-    <fieldset>
-        <legend class="filtered">Фильтры:</legend>
-        {{ filtered_queryset.form.as_p }}
-        <div>
-            <button type="submit">Фильтровать</button>
-        </div>
-    </fieldset>
-  </form>
-</div>
+    {% if anns_with_reply_my %}
+    <div class="sidebar-box pt-md-4">
+      <form action="#" class="search-form" method="get">
+        <fieldset>
+            <legend class="filtered">Фильтры:</legend>
+            {{ filtered_queryset.form.as_p }}
+            <div>
+                <button type="submit">Фильтровать</button>
+            </div>
+        </fieldset>
+      </form>
+    </div>
+    {% endif %}
 {% endblock searchbox %}

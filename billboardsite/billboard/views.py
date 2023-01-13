@@ -1,7 +1,9 @@
+from django.conf.global_settings import LOGIN_URL
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
+from django.core.mail import send_mail
 from django.http import HttpResponseRedirect, HttpRequest, QueryDict
 from django.urls import reverse_lazy, reverse
 from django.views.generic.edit import FormMixin
@@ -10,10 +12,13 @@ from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
+from billboardsite.settings import DEFAULT_FROM_EMAIL
+from .custom_mixins import OwnerOrAdminAnnouncePermissionCheck
 from .filters import AnnouncementFilter, ReplyFilter
 from .forms import AnnouncementForm, ReplyForm
 from .models import Announcement, Category, Reply
-from .utils import check_perm_reply_action
+from .signals import reply_approved_signal
+from .utils import check_perm_reply_action, check_perm_reply_add
 
 
 class AnnouncementList(ListView):
@@ -46,7 +51,9 @@ class AnnouncementDetail(DetailView, FormMixin):
         context['replies'] = self.object.replies.all()
         return context
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request: HttpRequest, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return HttpResponseRedirect(LOGIN_URL)
         form = self.get_form()
         if form.is_valid():
             return self.form_valid(form)
@@ -55,9 +62,7 @@ class AnnouncementDetail(DetailView, FormMixin):
 
     def form_valid(self, form):
         announcement = Announcement.objects.get(pk=self.kwargs['pk'])
-        # Запрет на отклик к своим же постам
-        if self.request.user == announcement.author_ann:
-            raise PermissionDenied('reply_for_yourself_ann')
+        check_perm_reply_add(self.request, announcement)  # Запрет на отклик к своим же постам
         form.instance = form.save(commit=False)
         form.instance.announcement = announcement
         form.instance.author_repl = self.request.user
@@ -76,6 +81,14 @@ class AnnouncementCreate(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.author_ann = User.objects.get(username=self.request.user)
+
+        # send_mail(
+        #     subject=f'{form.instance.title[:40]}',
+        #     message=form.instance.content,
+        #     from_email=DEFAULT_FROM_EMAIL,
+        #     recipient_list=['suvorovt@gmail.com']  # здесь список получателей. Например, секретарь, сам врач и т. д.
+        # )
+        # print('Отправлен email о создании нового объявления')
         return super().form_valid(form)
 
 
@@ -92,7 +105,8 @@ class AnnouncementUpdate(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-class AnnouncementDelete(LoginRequiredMixin, DeleteView):
+class AnnouncementDelete(LoginRequiredMixin, OwnerOrAdminAnnouncePermissionCheck, DeleteView):
+    permission_required = ''
     model = Announcement
     template_name = 'billboard/announcement_delete.html'
     success_url = reverse_lazy('announcement_list')
@@ -175,7 +189,7 @@ class CategoryListView(ListView):
 
     def get_queryset(self):
         self.category = get_object_or_404(Category, pk=self.kwargs['pk'])
-        queryset = Announcement.objects.filter(category=self.category).order_by('-time_update').order_by('-time_create')
+        queryset = Announcement.objects.filter(Q(category=self.category) & Q(is_published__gt=0)).order_by('-time_update').order_by('-time_create')
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -187,30 +201,32 @@ class CategoryListView(ListView):
 
 @login_required
 def reply_approve(request, pk):
-    reply_object = Reply.objects.get(pk=pk)
-    check_perm_reply_action(request, reply_object)
-    reply_object.is_approved = 'approved'
-    announcement_pk = reply_object.announcement.pk
-    reply_object.save()
+    reply = Reply.objects.get(pk=pk)
+    check_perm_reply_action(request, reply)
+    reply.is_approved = 'approved'
+    reply.save()
+    reply_approved_signal.send_robust(sender=Reply, instance=reply, path=request.META['HTTP_REFERER'])
+    announcement_pk = reply.announcement.pk
 
     return HttpResponseRedirect(reverse('announcement_detail', kwargs={'pk': announcement_pk}))
 
 
 @login_required
 def reply_declain(request, pk):
-    reply_object = Reply.objects.get(pk=pk)
-    check_perm_reply_action(request, reply_object)
-    reply_object.is_approved = 'declained'
-    announcement_pk = reply_object.announcement.pk
-    reply_object.save()
+    reply = Reply.objects.get(pk=pk)
+    check_perm_reply_action(request, reply)
+    reply.is_approved = 'declained'
+    reply.save()
+    announcement_pk = reply.announcement.pk
     return HttpResponseRedirect(reverse('announcement_detail', kwargs={'pk': announcement_pk}))
 
 
 @login_required
 def reply_reset(request, pk):
-    reply_object = Reply.objects.get(pk=pk)
-    check_perm_reply_action(request, reply_object)
-    reply_object.is_approved = 'no_status'
-    announcement_pk = reply_object.announcement.pk
-    reply_object.save()
+    reply = Reply.objects.get(pk=pk)
+    check_perm_reply_action(request, reply)
+    reply.is_approved = 'no_status'
+    reply.save()
+    print(request.META['HTTP_REFERER'])
+    announcement_pk = reply.announcement.pk
     return HttpResponseRedirect(reverse('announcement_detail', kwargs={'pk': announcement_pk}))

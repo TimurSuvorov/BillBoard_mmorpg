@@ -2,6 +2,8 @@ import django_filters
 from django import forms
 from django.contrib.auth.models import User
 
+from billboard.models import Announcement
+
 
 def get_current_user(request):
     if request is None:
@@ -21,10 +23,14 @@ class AnnouncementFilter(django_filters.FilterSet):
 
     author_ann = django_filters.ModelChoiceFilter(queryset=get_current_user,
                                                   field_name='author_ann',
-                                                  widget=forms.CheckboxInput(attrs={'onChange': 'this.form.submit()'})
-                                                      )
+                                                  widget=forms.RadioSelect(attrs={'onChange': 'this.form.submit()',
+                                                                                  'label.text': ''})
+                                                 )
 
 
+    class Meta:
+        model = Announcement
+        fields = ['title', 'author_ann']
 
 
 class ReplyFilter(django_filters.FilterSet):

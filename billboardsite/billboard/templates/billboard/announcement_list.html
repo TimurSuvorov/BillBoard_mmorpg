@@ -33,6 +33,14 @@
 				            </div>
 									</div>
 								</div>
+    {% empty %}
+        <div class="col-md-12">
+            <div class="blog-entry ftco-animate d-md-flex">
+                <div class="text text-2 pl-md-4">
+                    <h3 class="mb-2">Таких объявлений нет.</h3>
+                </div>
+            </div>
+        </div>
     {% endfor %}
 
 {% endblock announcement %}
@@ -71,8 +79,8 @@
             {{ filtered_queryset.form.title }}
         </div>
       {% if request.user.is_authenticated %}
-        <div class="form-group" align="right">
-            <p><label class="form-label" for="{{ filtered_queryset.form.author_ann.id_for_label }}">Только мои объявления: </label> &nbsp;{{ filtered_queryset.form.author_ann }}</p>
+        <div style="margin-top: 30px">
+            <p><label class="form-label" for="{{ filtered_queryset.form.author_ann.id_for_label }}">Мои объявления: </label> &nbsp;{{ filtered_queryset.form.author_ann }}</p>
         </div>
       {% endif %}
       </form>
