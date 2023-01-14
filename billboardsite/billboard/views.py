@@ -4,17 +4,17 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
-from django.http import HttpResponseRedirect, HttpRequest, QueryDict
+from django.http import HttpResponseRedirect, HttpRequest
 from django.urls import reverse_lazy, reverse
 from django.views.generic.edit import FormMixin
 from pprint import pprint
 from django.db.models import Q
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 from billboardsite.settings import DEFAULT_FROM_EMAIL
 from .custom_mixins import OwnerOrAdminAnnouncePermissionCheck
-from .filters import AnnouncementFilter, ReplyFilter
+from .filters import AnnouncementFilter, ReplyFilter, AnnouncementSearchFilter
 from .forms import AnnouncementForm, ReplyForm
 from .models import Announcement, Category, Reply
 from .signals import reply_approved_signal
@@ -83,14 +83,6 @@ class AnnouncementCreate(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.author_ann = User.objects.get(username=self.request.user)
-
-        # send_mail(
-        #     subject=f'{form.instance.title[:40]}',
-        #     message=form.instance.content,
-        #     from_email=DEFAULT_FROM_EMAIL,
-        #     recipient_list=['suvorovt@gmail.com']  # здесь список получателей. Например, секретарь, сам врач и т. д.
-        # )
-        # print('Отправлен email о создании нового объявления')
         return super().form_valid(form)
 
 
@@ -112,6 +104,27 @@ class AnnouncementDelete(LoginRequiredMixin, OwnerOrAdminAnnouncePermissionCheck
     model = Announcement
     template_name = 'billboard/announcement_delete.html'
     success_url = reverse_lazy('announcement_list')
+
+
+class AnnouncementSearch(ListView):
+    model = Announcement
+    context_object_name = 'all_announcement'
+    template_name = 'billboard/announcement_search.html'
+    paginate_by = 6
+
+    def get_queryset(self):
+        queryset_ann = Announcement.objects.filter(is_published=True).order_by('-time_update')
+        queryset_auth = User.objects.filter(username__in=queryset_ann.values_list('author_ann__username', flat=True))
+        self.filtered_queryset = AnnouncementSearchFilter(data=self.request.GET,
+                                                          queryset=queryset_ann,
+                                                          queryset_auth=queryset_auth)
+        return self.filtered_queryset.qs
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data()
+        context['announcement_search_selected'] = 1
+        context['filtered_queryset'] = self.filtered_queryset
+        return context
 
 
 class AnnWithReplyForMeList(LoginRequiredMixin, ListView):

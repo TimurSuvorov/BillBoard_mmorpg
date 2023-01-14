@@ -1,0 +1,105 @@
+{% extends 'flatpages/base.html' %}
+
+{% load static %}
+{% load custom_tags %}
+{% load custom_filters %}
+
+{% load crispy_forms_tags %}
+
+{% block category %}
+    {% tag_categories_block %}
+{% endblock category %}
+
+
+{% block announcement %}
+<style>
+
+.form-group {
+    margin-bottom: 0.7rem;
+}
+
+.form-control {
+    height: 35px !important;
+    width: 100%;
+    background: #fff !important;
+    color: #000000 !important;
+    font-size: 13px;
+    border-radius: 0px;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+}
+
+.form-control:focus, .form-control:active {
+    border-color: #94e80e;
+}
+
+.form-check-label {
+    margin-bottom: 0;
+    font-size: 13px;
+}
+
+</style>
+
+                                <!-- SEARCH START -->
+<form action="" method="get" style="width: 100%; margin-bottom: 3rem;">
+    <fieldset>
+    <legend class="filtered">Поиск по объявлениям:</legend>
+    <div class="form-group">
+        {{ filtered_queryset.form.title|as_crispy_field }}
+    </div>
+    <div class="form-group">
+        {{ filtered_queryset.form.content|as_crispy_field }}
+    </div>
+    <div class="form-row">
+        <div class="form-group col-6">
+            {{ filtered_queryset.form.time_create|as_crispy_field }}
+        </div>
+        <div class="form-group col-6">
+            {{ filtered_queryset.form.time_update|as_crispy_field }}
+        </div>
+    </div>
+    <div class="form-group">
+        {{ filtered_queryset.form.author_ann|as_crispy_field }}
+    </div>
+    <div>
+        <button type="submit" class="btn btn-primary w-100">Применить</button>
+    </div>
+    </fieldset>
+    <hr>
+
+</form>
+                                    <!-- SEARCH END -->
+
+
+    {% for announcement in all_announcement %}
+        {% isupdated announcement.pk as isupdated %}
+			    			<div class="col-md-12">
+									<div class="blog-entry ftco-animate d-md-flex">
+										<a href="{% url 'announcement_detail' pk=announcement.pk %}" class="img img-2" style="background-image: url({% static 'billboard/images/image_1.jpg' %});"></a>
+										<div class="text text-2 pl-md-4">
+				              <h3 class="mb-2"><a href="{% url 'announcement_detail' pk=announcement.pk %}">{{ announcement.title }}</a></h3>
+                            <div class="meta-wrap">
+                                  <p class="meta">
+                                    <span><i class="icon-face mr-1"></i>Автор: {{ announcement.author_ann }}</span>
+                                    <span><i class="icon-calendar mr-1"></i>{% if isupdated %}Обновлено: {{ announcement.time_update|date:'d/m/y H:i' }}{% else %}Создано: {{ announcement.time_create|date:'d/m/y H:i' }}{% endif %}</span>
+                                    <span><a href="{% url 'announcement_by_category' pk=announcement.category.pk  %}"><i class="icon-folder-o mr-1"></i>{{ announcement.category }}</a></span>
+				              		<span><i class="icon-comment2 mr-1" title="Отлики"></i>{{ announcement.replies.all.count }}</span>
+				              	  </p>
+			              	</div>
+				              <p class="mb-4">{{ announcement.content|striptags|safe|truncatechars:100 }}</p>
+				              <p><a href="{% url 'announcement_detail' pk=announcement.pk %}" class="btn-custom">Подробнее <span class="ion-ios-arrow-forward"></span></a></p>
+				            </div>
+									</div>
+								</div>
+    {% empty %}
+        <div class="col-md-12">
+            <div class="blog-entry ftco-animate d-md-flex">
+                <div class="text text-2 pl-md-4">
+                    <h3 class="mb-2">Таких объявлений нет.</h3>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+
+{% endblock announcement %}

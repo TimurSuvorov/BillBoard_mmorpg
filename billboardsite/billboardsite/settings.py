@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.staticfiles',
     'crispy_forms',
+    'crispy_bootstrap5',
     'ckeditor',
     'ckeditor_uploader',
     'django_filters',
@@ -157,6 +158,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Crispy settings
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+# CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
 # Base url to serve media files
 MEDIA_URL = '/media/'
