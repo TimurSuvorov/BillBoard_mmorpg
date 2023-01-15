@@ -39,6 +39,13 @@
 		<aside id="colorlib-aside" role="complementary" class="js-fullheight">
 			<nav id="colorlib-main-menu" role="navigation">
 				<ul>
+					<li {% if newsletter_list_selected %}
+                            class="colorlib-active"><a href="{% url 'newsletter_list' %}">
+                        {% else %}
+                            ><a href="{% url 'newsletter_list' %}">
+                        {% endif %}Новости игр</a>
+                    </li>
+                    <hr>
 					<li {% if announcement_list_selected %}
                             class="colorlib-active"><a href="{% url 'announcement_list' %}">
                         {% else %}

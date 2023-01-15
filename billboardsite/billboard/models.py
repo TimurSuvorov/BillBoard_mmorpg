@@ -126,19 +126,27 @@ class Newsletter(models.Model):
                              unique=True,
                              db_index=True,
                              verbose_name='Заголовок')
-    text_content = models.TextField(validators=[MinLengthValidator(4)],
-                                    verbose_name='Содержание(текст)')
+    content = models.TextField(validators=[MinLengthValidator(4)],
+                               verbose_name='Содержание(текст)')
     category = models.ForeignKey(to='Category',
                                  on_delete=models.CASCADE,
                                  related_name='cat_newsletters',
                                  verbose_name='Категория')
-    is_ready = models.BooleanField(default=True,
-                                   verbose_name='Готовность')
+    is_published = models.BooleanField(default=True,
+                                       verbose_name='Готовность')
+    is_sent = models.BooleanField(default=False,
+                                  verbose_name='Отправлено')
     time_create = models.DateTimeField(auto_now_add=True,
                                        verbose_name='Дата создания')
 
     def __str__(self):
         return f'{self.title}'
+
+    def newsletter_preview(self):
+        return f'{self.title[:40]}...'
+
+    def get_absolute_url(self):
+        return reverse('newsletter_list')
 
     class Meta:
         verbose_name = 'Рассылка'
@@ -164,3 +172,8 @@ class UserProfile(models.Model):
                                             verbose_name='Оповещение новых отликов')
     is_news_subscribe = models.BooleanField(default=True,
                                             verbose_name='Подписка на рассылку')
+
+    class Meta:
+        verbose_name = 'Профиль пользователя'
+        verbose_name_plural = 'Профиль пользователя'
+

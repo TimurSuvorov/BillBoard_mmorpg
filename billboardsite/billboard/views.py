@@ -1,7 +1,7 @@
 from django.conf.global_settings import LOGIN_URL
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import User
+from django.contrib.auth.models import Group
 from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
 from django.http import HttpResponseRedirect, HttpRequest
@@ -12,15 +12,15 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
-from billboardsite.settings import DEFAULT_FROM_EMAIL
 from .custom_mixins import OwnerOrAdminAnnouncePermissionCheck
 from .filters import AnnouncementFilter, ReplyFilter, AnnouncementSearchFilter
-from .forms import AnnouncementForm, ReplyForm
-from .models import Announcement, Category, Reply
+from .forms import AnnouncementForm, ReplyForm, NewsLetterForm
+from .models import *
 from .signals import reply_approved_signal
 from .utils import check_perm_reply_action, check_perm_reply_add
 
 
+# Announcement related Views
 class AnnouncementList(ListView):
     model = Announcement
     context_object_name = 'all_announcement'
@@ -95,6 +95,7 @@ class AnnouncementCreate(LoginRequiredMixin, CreateView):
         context['announcement_create_selected'] = 1
         return context
 
+
 class AnnouncementUpdate(LoginRequiredMixin, UpdateView):
     model = Announcement
     raise_exception = True
@@ -102,8 +103,7 @@ class AnnouncementUpdate(LoginRequiredMixin, UpdateView):
     template_name = 'billboard/announcement_edit.html'
 
     def form_valid(self, form):
-        announcement = self.get_object()
-        if self.request.user != announcement.author_ann:
+        if self.request.user != self.object.author_ann:
             raise PermissionDenied('not_author_of_ann')
         return super().form_valid(form)
 
@@ -136,6 +136,36 @@ class AnnouncementSearch(ListView):
         return context
 
 
+# Reply related Views
+@login_required
+def reply_approve(request, pk):
+    reply = Reply.objects.get(pk=pk)
+    check_perm_reply_action(request, reply)
+    reply.is_approved = 'approved'
+    reply.save()
+    reply_approved_signal.send_robust(sender=Reply, instance=reply, path=request.META['HTTP_REFERER'])
+
+    return HttpResponseRedirect(reverse('announcement_detail', kwargs={'pk': reply.announcement.pk}))
+
+
+@login_required
+def reply_declain(request, pk):
+    reply = Reply.objects.get(pk=pk)
+    check_perm_reply_action(request, reply)
+    reply.is_approved = 'declained'
+    reply.save()
+    return HttpResponseRedirect(reverse('announcement_detail', kwargs={'pk': reply.announcement.pk}))
+
+
+@login_required
+def reply_reset(request, pk):
+    reply = Reply.objects.get(pk=pk)
+    check_perm_reply_action(request, reply)
+    reply.is_approved = 'no_status'
+    reply.save()
+    return HttpResponseRedirect(reverse('announcement_detail', kwargs={'pk': reply.announcement.pk}))
+
+
 class AnnWithReplyForMeList(LoginRequiredMixin, ListView):
     model = Announcement
     context_object_name = 'anns_with_reply_forme'
@@ -145,9 +175,9 @@ class AnnWithReplyForMeList(LoginRequiredMixin, ListView):
     def get_queryset(self):
         # Берем МОИ объявления, где есть отлики
         self.queryset_ann = Announcement.objects.filter(Q(author_ann__username=self.request.user) &
-                                                    Q(num_replies__gt=0) &
-                                                    Q(is_published__gt=0)
-                                                    ).order_by('-time_update')
+                                                        Q(num_replies__gt=0) &
+                                                        Q(is_published__gt=0)
+                                                        ).order_by('-time_update')
         # Вытаскиваем по ним категории
         cat_list = self.queryset_ann.values_list('category__id', flat=True)
         self.queryset_cat = Category.objects.filter(id__in=cat_list)
@@ -205,6 +235,7 @@ class ReplyDelete(LoginRequiredMixin, DeleteView):
         return HttpResponseRedirect(success_url)
 
 
+# Category related Views
 class CategoryListView(ListView):
     model = Announcement
     ordering = ['-time_update']
@@ -212,44 +243,70 @@ class CategoryListView(ListView):
     context_object_name = 'category_announcement'
 
     def get_queryset(self):
+        queryset = super().get_queryset()
         self.category = get_object_or_404(Category, pk=self.kwargs['pk'])
-        queryset = Announcement.objects.filter(Q(category=self.category) & Q(is_published__gt=0)).order_by('-time_update').order_by('-time_create')
-        return queryset
+        return queryset.filter(Q(category=self.category) & Q(is_published__gt=0)).order_by('-time_update').order_by('-time_create')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        context['category'] = self.category
         context['category_selected'] = self.kwargs['pk']
+        context['category'] = self.category
         return context
 
 
-@login_required
-def reply_approve(request, pk):
-    reply = Reply.objects.get(pk=pk)
-    check_perm_reply_action(request, reply)
-    reply.is_approved = 'approved'
-    reply.save()
-    reply_approved_signal.send_robust(sender=Reply, instance=reply, path=request.META['HTTP_REFERER'])
-    announcement_pk = reply.announcement.pk
+# NewsLetters related Views
+class NewsLetterList(ListView):
+    model = Newsletter
+    context_object_name = 'all_newsletter'
+    template_name = 'billboard/newsletter_list.html'
+    paginate_by = 3
 
-    return HttpResponseRedirect(reverse('announcement_detail', kwargs={'pk': announcement_pk}))
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if Group.objects.get(name='managers').user_set.filter(username=self.request.user).exists():
+            return queryset.order_by('-time_create')
+        return queryset.filter(is_published=True).order_by('-time_create')
 
-
-@login_required
-def reply_declain(request, pk):
-    reply = Reply.objects.get(pk=pk)
-    check_perm_reply_action(request, reply)
-    reply.is_approved = 'declained'
-    reply.save()
-    announcement_pk = reply.announcement.pk
-    return HttpResponseRedirect(reverse('announcement_detail', kwargs={'pk': announcement_pk}))
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['newsletter_list_selected'] = 1
+        return context
 
 
-@login_required
-def reply_reset(request, pk):
-    reply = Reply.objects.get(pk=pk)
-    check_perm_reply_action(request, reply)
-    reply.is_approved = 'no_status'
-    reply.save()
-    announcement_pk = reply.announcement.pk
-    return HttpResponseRedirect(reverse('announcement_detail', kwargs={'pk': announcement_pk}))
+class NewsLetterDetail(LoginRequiredMixin, DetailView):
+    model = Newsletter
+    context_object_name = 'newsletter_detail'
+    template_name = 'billboard/newsletter_detail.html'
+
+    def get_success_url(self):
+        return reverse('newsletter_detail.html', kwargs={'pk': self.kwargs['pk']})
+
+
+class NewsLetterCreate(LoginRequiredMixin, CreateView):
+    model = Newsletter
+    form_class = NewsLetterForm
+    template_name = 'billboard/newsletter_create.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['newsletter_create_selected'] = 1
+        return context
+
+
+class NewsLetterUpdate(LoginRequiredMixin, UpdateView):
+    model = Newsletter
+    raise_exception = True
+    form_class = NewsLetterForm
+    template_name = 'billboard/newsletter_edit.html'
+
+    def form_valid(self, form):
+        if not Group.objects.get(name='managers').user_set.filter(username=self.request.user):
+            raise PermissionDenied
+        return super().form_valid(form)
+
+
+class NewsLetterDelete(LoginRequiredMixin, DeleteView):
+    model = Newsletter
+    template_name = 'billboard/newsletter_delete.html'
+    success_url = reverse_lazy('newsletter_list')
+

@@ -44,7 +44,7 @@ class ReplyFilter(django_filters.FilterSet):
     title = django_filters.ModelMultipleChoiceFilter(queryset=None,
                                                      field_name='title',
                                                      lookup_expr='icontains',
-                                                     label='Обяявление',
+                                                     label='Объявление',
                                                      )
 
     category = django_filters.ModelMultipleChoiceFilter(queryset=None,

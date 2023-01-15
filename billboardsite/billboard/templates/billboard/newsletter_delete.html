@@ -1,0 +1,26 @@
+{% extends 'flatpages/base.html' %}
+
+{% load static %}
+{% load custom_tags %}
+
+{% block title %}
+    Удаление новости для рассылки
+{% endblock title %}
+
+{% block announcement %}
+    <div class="col-md-12">
+        <h1 class="mb-2">Удаление новости для рассылки «{{ object|truncatechars:40 }}»</h1>
+    </div>
+
+    <form method="post">{% csrf_token %}
+        <p>Вы действительно хотите удалить новость?</p>
+        {{ form }}
+        <p class="form-buttons">
+			<input type="submit" class="btn btn-outline-danger" value="Удалить">
+			<a href="{% url 'newsletter_detail' object.pk %}" class="btn btn-secondary">Отмена</a>
+            <a href="{% url 'newsletter_edit' object.pk %}" class="btn btn-outline-primary">Редактировать</a>
+		</p>
+    </form>
+
+{% endblock announcement %}
+

@@ -4,7 +4,7 @@
 {% load custom_tags %}
 
 {% block title %}
-    Новое объявление
+    Редактирование новости для рассылки
 {% endblock title %}
 
 {% block category %}
@@ -13,27 +13,26 @@
 
 {% block announcement %}
     <div class="col-md-12">
-        <h1 class="mb-2">Новое объявление</h1>
+        <h1 class="mb-2">Редактирование новости для рассылки</h1>
     </div>
+
 
 <div class="container mt-5">
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.media}}
-
-            <div class="form-error">{{ form.non_field_errors }}</div>
             {% for field in form %}
             <div class="form-group">
                 <div><label for="{{ field.id_for_label }}" class="text-dark">{{ field.label }}: </label></div>
                 {{ field }}
-                <div class="form-error">{{ field.errors }}</div>
             </div>
             {% endfor %}
             <div class="row justify-content-center">
-                <input type="submit" class="btn btn-info" value="Создать" />
+                <input type="submit" class="btn btn-success btn-sm" value="Изменить" />
+                &nbsp;
+                <a href="{% url 'newsletter_list' %}" class="btn btn-outline-secondary btn-sm">Отмена</a>
             </div>
         </form>
 </div>
 
 {% endblock announcement %}
-

@@ -16,10 +16,10 @@
         <h3 class="mb-2"><a href="{% url 'announcement_detail' pk=announcement.pk %}" style="color: black">{{ announcement.title }}</a></h3>
         <div class="meta-wrap">
             <p class="meta">
-                <span style="font-size: 12px; margin-right: 5px"><i class="icon-calendar mr-1"></i>{% if isupdated %}Обновлено{% else %}Создано{% endif %}: {{ announcement.time_create|date:'d/m/y H:i' }}</span>
-                <span style="font-size: 12px; margin-right: 5px"><a href="#"><i class="icon-folder-o mr-1"></i>{{ announcement.category }}</a></span>
-                <span style="font-size: 12px; margin-right: 5px"><i class="icon-comment2 mr-1" title="Отлики"></i>{{ announcement.replies.all.count }}</span>
-                <span><i class="icon-eye" title="Просмотры"></i>&nbsp;{{ announcement.pageviews }}</span>
+                <span style="font-size: 11px; margin-right: 5px"><i class="icon-calendar mr-1"></i>{% if isupdated %}Обновлено{% else %}Создано{% endif %}: {{ announcement.time_create|date:'d/m/y H:i' }}</span>
+                <span style="font-size: 11px; margin-right: 5px"><a href="#"><i class="icon-folder-o mr-1"></i>{{ announcement.category }}</a></span>
+                <span style="font-size: 11px; margin-right: 5px"><i class="icon-comment2 mr-1" title="Отлики"></i>{{ announcement.replies.all.count }}</span>
+                <span style="font-size: 11px; margin-right: 5px"><i class="icon-eye" title="Просмотры"></i>&nbsp;{{ announcement.pageviews }}</span>
             {% if request.user == announcement.author_ann %}
             {% endif %}
             </p>
@@ -98,7 +98,7 @@
             <legend class="filtered">Фильтры:</legend>
             {{ filtered_queryset.form.as_p }}
             <div>
-                <button type="submit">Фильтровать</button>
+                <button type="submit">Применить</button>
             </div>
         </fieldset>
       </form>

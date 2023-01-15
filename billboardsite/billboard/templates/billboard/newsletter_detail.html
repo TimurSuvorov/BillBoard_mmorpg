@@ -1,0 +1,38 @@
+{% extends 'flatpages/base.html' %}
+
+{% load static %}
+{% load custom_tags %}
+{% load custom_filters %}
+
+{% block title %}
+    {{ newsletter_detail.title|truncatechars:50 }}
+{% endblock title %}
+
+{% block category %}
+    {% tag_categories_block %}
+{% endblock category %}
+
+{% block announcement %}
+    <div class="col-md-12">
+        <h1 class="mb-2">{{ newsletter_detail.title }}</h1>
+        <div class="meta-wrap">
+            <p class="meta">
+                <span style="font-size: 11px; margin-right: 5px"><i class="icon-calendar mr-1"></i>{{ newsletter_detail.time_create|date:'d.m.y' }}</span>
+                <span style="font-size: 11px; margin-right: 5px"><a href="#"><i class="icon-folder-o mr-1"></i>{{ newsletter_detail.category }}</a></span>
+                {% if request.user == newsletter_detail.author_ann or request.user.is_superuser %}
+            <p>
+                <span style="font-size: 12px"><a href="{% url 'newsletter_edit' newsletter_detail.pk %}" style="color: green"><i class="icon-edit"></i>Изменить</a></span>
+                <span style="font-size: 12px; margin-left: 5px;"><a href="{% url 'newsletter_delete' newsletter_detail.pk %}" style="color: red"><i class="icon-remove"></i>Удалить</a></span>
+            </p>
+            {% endif %}
+            </p>
+        </div>
+        <hr>
+    </div>
+    <div style="padding-left: 20px">
+        {{ newsletter_detail.content|safe|linebreaks }}
+    </div>
+            <hr width="100%">
+
+{% endblock announcement %}
+
