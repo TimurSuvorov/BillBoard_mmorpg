@@ -25,6 +25,7 @@
             <p>
                 <span style="font-size: 12px"><a href="{% url 'announcement_edit' announcement_detail.pk %}" style="color: green"><i class="icon-edit"></i>Изменить</a></span>
                 <span style="font-size: 12px; margin-left: 5px;"><a href="{% url 'announcement_delete' announcement_detail.pk %}" style="color: red"><i class="icon-remove"></i>Удалить</a></span>
+                <span><i class="icon-eye" title="Просмотры"></i>&nbsp;{{ announcement.pageviews }}</span>
             </p>
             {% endif %}
             </p>

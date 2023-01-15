@@ -47,6 +47,11 @@ class AnnouncementDetail(DetailView, FormMixin):
     context_object_name = 'announcement_detail'
     template_name = 'billboard/announcement_detail.html'
 
+    def get(self, request, *args, **kwargs):
+        render_to_response = super(AnnouncementDetail, self).get(request, *args, **kwargs)
+        self.object.pageviews_plus()
+        return render_to_response
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         context['category_selected'] = self.object.category.id
@@ -85,6 +90,10 @@ class AnnouncementCreate(LoginRequiredMixin, CreateView):
         form.instance.author_ann = User.objects.get(username=self.request.user)
         return super().form_valid(form)
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data()
+        context['announcement_create_selected'] = 1
+        return context
 
 class AnnouncementUpdate(LoginRequiredMixin, UpdateView):
     model = Announcement

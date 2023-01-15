@@ -33,20 +33,27 @@ class Announcement(models.Model):
 
     num_replies = models.IntegerField(default=0, verbose_name='Количество откликов')
 
+    pageviews = models.PositiveBigIntegerField(default=0, verbose_name='Количество просмотров')
+
     def __str__(self):
         return f'{self.title}'
 
     def announcement_preview(self):
         return f'{self.title[:40]}...'
 
-    def get_absolute_url(self):
-        return reverse('announcement_detail', kwargs={'pk': self.pk})
+    def pageviews_plus(self):
+        self.pageviews += 1
+        self.save()
+        return self.pageviews
 
     def count_replies(self):
         replies_num = self.replies.all().count()
         self.num_replies = replies_num
         self.save()
         return replies_num
+
+    def get_absolute_url(self):
+        return reverse('announcement_detail', kwargs={'pk': self.pk})
 
     class Meta:
         verbose_name = 'Объявления'
@@ -66,6 +73,10 @@ class Category(models.Model):
 
     def __str__(self):
         return f'{self.catname}'
+
+    @property
+    def published_cat_ann(self):
+        return self.cat_announcements.all().filter(is_published=True).count()
 
     class Meta:
         verbose_name = 'Категория'

@@ -45,18 +45,30 @@
                             ><a href="{% url 'announcement_list' %}">
                         {% endif %}Все объявления</a>
                     </li>
-
-					<li {% if reply_forme_list_selected %}
-                            class="colorlib-active"><a href="{% url 'reply_forme_list' %}">
+					<li {% if announcement_create_selected %}
+                            class="colorlib-active"><a href="{% url 'announcement_create' %}">
                         {% else %}
-                            ><a href="{% url 'reply_forme_list' %}">
-                        {% endif %}Отлики для меня</a>
+                            ><a href="{% url 'announcement_create' %}">
+                        {% endif %}Новое объявление</a>
                     </li>
+					<li {% if announcement_search_selected %}
+                            class="colorlib-active"><a href="{% url 'announcement_search' %}">
+                        {% else %}
+                            ><a href="{% url 'announcement_search' %}">
+                        {% endif %}Поиск по объявлениям</a>
+                    </li>
+                    <hr>
                     <li {% if reply_my_list_selected %}
                             class="colorlib-active"><a href="{% url 'reply_my_list' %}">
                         {% else %}
                             ><a href="{% url 'reply_my_list' %}">
                         {% endif %}Мои отлики</a>
+                    </li>
+					<li {% if reply_forme_list_selected %}
+                            class="colorlib-active"><a href="{% url 'reply_forme_list' %}">
+                        {% else %}
+                            ><a href="{% url 'reply_forme_list' %}">
+                        {% endif %}Отлики для меня</a>
                     </li>
 				</ul>
 			</nav>

@@ -8184,7 +8184,7 @@ h1, h2, h3, h4, h5,
 #colorlib-aside {
   padding-top: 5em;
   padding-bottom: 40px;
-  padding-left: 2em;
+  padding-left: 1em;
   padding-right: 2em;
   width: 25%;
   position: fixed;
@@ -8613,7 +8613,7 @@ h1, h2, h3, h4, h5,
       display: block; }
       .blog-entry .text .meta-wrap .meta span {
         font-size: 12px;
-        margin: 0 10px 0 0;
+        margin: 0 5px 0 0;
         color: #5e5e5e; }
         .blog-entry .text .meta-wrap .meta span a {
           color: #000000; }
