@@ -1,7 +1,9 @@
 {% extends 'flatpages/base.html' %}
 
 {% load static %}
+{% load custom_tags %}
 {% load custom_filters %}
+
 
 {% block title %}
     Отлики для меня
@@ -72,6 +74,10 @@
 <!-- END newreplies-form -->
 
 {% endblock announcement %}
+
+{% block lastnewsletters %}
+    {% tags_lastnewsletters_block %}
+{% endblock lastnewsletters %}
 
 {% block paginator %}
 {# Если объявлений больше, чем количества на страницу #}

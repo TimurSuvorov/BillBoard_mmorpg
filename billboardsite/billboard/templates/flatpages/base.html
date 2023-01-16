@@ -1,5 +1,8 @@
 {% load static %}
 {% load custom_tags %}
+{% load account %}
+{% load socialaccount %}
+
 
 
 <!DOCTYPE html>
@@ -12,6 +15,9 @@
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Abril+Fatface&display=swap" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
 
     <link rel="stylesheet" href="{% static 'billboard/css/open-iconic-bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'billboard/css/animate.css' %}">
@@ -31,6 +37,8 @@
     <link rel="stylesheet" href="{% static 'billboard/css/flaticon.css' %}">
     <link rel="stylesheet" href="{% static 'billboard/css/icomoon.css' %}">
     <link rel="stylesheet" href="{% static 'billboard/css/style.css' %}">
+
+
   </head>
   <body>
 
@@ -82,8 +90,19 @@
 
 			<div class="colorlib-footer">
 				<h1 id="colorlib-logo" class="mb-4"><a href="{% url 'announcement_list' %}" style="background-image: url({% static 'billboard/images/bg_1.jpg' %});">Play&<span>Win</span></a></h1>
-			</div>
-		</aside> <!-- END COLORLIB-ASIDE -->
+                {% if request.user.is_authenticated %}
+                    <p class="pfooter">
+                        <span>Добро пожаловать, {% user_display user %}</span><br>
+                        <span><i class="" aria-hidden="true"></i><a href="{% url 'account_logout' %}">Выйти</a></span>
+                {% else %}
+                    <p class="pfooter">
+                        <span>Пожалуйста, авторизуйтесь c помощью:</span><br>
+                        <span><i class="icon-dot-circle-o" aria-hidden="true"></i><a href="{% url 'account_login' %}">&nbsp;email</a></span><br>
+                        <span><i class="icon-dot-circle-o" aria-hidden="true"></i><a href="{% provider_login_url "yandex" %}">&nbsp;Yandex</a></span><br>
+                        <span><i class="icon-dot-circle-o" aria-hidden="true"></i><a href="{% provider_login_url "vk" %}">&nbsp;VK</a></span>
+                    </p>
+		        {% endif %}
+        </aside> <!-- END COLORLIB-ASIDE -->
 		<div id="colorlib-main">
 			<section class="ftco-section ftco-no-pt ftco-no-pb">
 	    	<div class="container">
@@ -113,42 +132,12 @@
                                 {% block searchbox %}
                                 {% endblock searchbox %}
                             <!-- SEARCH END -->
-	            <div class="sidebar-box ftco-animate">
-	              <h3 class="sidebar-heading">Popular Articles</h3>
-	              <div class="block-21 mb-4 d-flex">
-	                <a class="blog-img mr-4" style="background-image: url({% static 'billboard/images/image_1.jpg' %});"></a>
-	                <div class="text">
-	                  <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control</a></h3>
-	                  <div class="meta">
-	                    <div><a href="#"><span class="icon-calendar"></span> June 28, 2019</a></div>
-	                    <div><a href="#"><span class="icon-person"></span> Dave Lewis</a></div>
-	                    <div><a href="#"><span class="icon-chat"></span> 19</a></div>
-	                  </div>
-	                </div>
-	              </div>
-	              <div class="block-21 mb-4 d-flex">
-	                <a class="blog-img mr-4" style="background-image: url({% static 'billboard/images/image_2.jpg' %});"></a>
-	                <div class="text">
-	                  <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control</a></h3>
-	                  <div class="meta">
-	                    <div><a href="#"><span class="icon-calendar"></span> June 28, 2019</a></div>
-	                    <div><a href="#"><span class="icon-person"></span> Dave Lewis</a></div>
-	                    <div><a href="#"><span class="icon-chat"></span> 19</a></div>
-	                  </div>
-	                </div>
-	              </div>
-	              <div class="block-21 mb-4 d-flex">
-	                <a class="blog-img mr-4" style="background-image: url({% static 'billboard/images/image_3.jpg' %});"></a>
-	                <div class="text">
-	                  <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control</a></h3>
-	                  <div class="meta">
-	                    <div><a href="#"><span class="icon-calendar"></span> June 28, 2019</a></div>
-	                    <div><a href="#"><span class="icon-person"></span> Dave Lewis</a></div>
-	                    <div><a href="#"><span class="icon-chat"></span> 19</a></div>
-	                  </div>
-	                </div>
-	              </div>
-	            </div>
+
+
+                            <!-- LASTNEWSLETTERS START -->
+                                {% block lastnewsletters %}
+                                {% endblock lastnewsletters %}
+                            <!-- LASTNEWSLETTERS END -->
 
 							<div class="sidebar-box subs-wrap img py-4" style="background-image: url({% static 'billboard/images/bg_1.jpg' %});">
 								<div class="overlay"></div>
@@ -162,10 +151,6 @@
 	              </form>
 	            </div>
 
-	            <div class="sidebar-box ftco-animate">
-	              <h3 class="sidebar-heading">Paragraph</h3>
-	              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus itaque, autem necessitatibus voluptate quod mollitia delectus aut.</p>
-	            </div>
 	          </div><!-- END COL -->
 	    		</div>
 	    	</div>

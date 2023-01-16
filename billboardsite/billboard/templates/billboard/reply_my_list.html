@@ -1,8 +1,8 @@
 {% extends 'flatpages/base.html' %}
 
 {% load static %}
-{% load custom_filters %}
 {% load custom_tags %}
+{% load custom_filters %}
 
 
 {% block title %}
@@ -65,6 +65,10 @@
 
 {% endblock announcement %}
 
+{% block lastnewsletters %}
+    {% tags_lastnewsletters_block %}
+{% endblock lastnewsletters %}
+
 {% block paginator %}
 {# Если объявлений больше, чем количества на страницу #}
 {% if paginator.count > paginator.per_page %}
@@ -98,7 +102,7 @@
             <legend class="filtered">Фильтры:</legend>
             {{ filtered_queryset.form.as_p }}
             <div>
-                <button type="submit">Применить</button>
+                <button type="submit" class="btn btn-primary">Применить</button>
             </div>
         </fieldset>
       </form>

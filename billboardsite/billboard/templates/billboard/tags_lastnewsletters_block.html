@@ -1,0 +1,16 @@
+{% load static %}
+
+<div class="sidebar-box ftco-animate">
+  <h3 class="sidebar-heading">Последние новости</h3>
+  <div class="block-21 mb-4 d-flex">
+    <a class="blog-img mr-4" style="background-image: url({% static 'billboard/images/image_1.jpg' %});"></a>
+    <div class="text">
+      {% for newsletter in lastnewsletters %}
+          <h3 class="heading"><a href="{% url 'newsletter_detail' newsletter.pk %}">{{ newsletter.newsletter_preview }}</a></h3>
+          <div class="meta">
+            <div><a href="{% url 'newsletter_detail' newsletter.pk %}"><span class="icon-calendar"></span>&nbsp;{{ newsletter.time_create|date:'d.m.y' }}</a></div>
+          </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>

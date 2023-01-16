@@ -143,7 +143,7 @@ class Newsletter(models.Model):
         return f'{self.title}'
 
     def newsletter_preview(self):
-        return f'{self.title[:40]}...'
+        return f'{self.title[:60]}...'
 
     def get_absolute_url(self):
         return reverse('newsletter_list')

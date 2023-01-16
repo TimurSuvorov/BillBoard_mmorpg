@@ -1,7 +1,7 @@
 import datetime
 
 from django import template
-from billboard.models import Announcement, Category
+from billboard.models import Announcement, Category, Newsletter
 
 register = template.Library()
 
@@ -21,3 +21,9 @@ def tag_categories_block(context):
     categories = Category.objects.all()
     return {'categories': categories,
             'category_selected': category_selected}
+
+
+@register.inclusion_tag('billboard/tags_lastnewsletters_block.html', name='tags_lastnewsletters_block')
+def tags_lastnewsletters_block():
+    lastnewsletters = Newsletter.objects.all().filter(is_published=True).order_by('-time_create')[:3]
+    return {'lastnewsletters': lastnewsletters}
