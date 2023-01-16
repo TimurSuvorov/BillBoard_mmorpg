@@ -1,18 +1,16 @@
-from django.conf.global_settings import LOGIN_URL
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.models import Group
 from django.core.exceptions import PermissionDenied
-from django.core.mail import send_mail
 from django.http import HttpResponseRedirect, HttpRequest
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse_lazy
 from django.views.generic.edit import FormMixin
 from pprint import pprint
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
-from .custom_mixins import OwnerOrAdminAnnouncePermissionCheck
+from .custom_mixins import OwnerOrAdminAnnounceCheckMixin
 from .filters import AnnouncementFilter, ReplyFilter, AnnouncementSearchFilter
 from .forms import AnnouncementForm, ReplyForm, NewsLetterForm
 from .models import *
@@ -60,7 +58,7 @@ class AnnouncementDetail(DetailView, FormMixin):
 
     def post(self, request: HttpRequest, *args, **kwargs):
         if not request.user.is_authenticated:
-            return HttpResponseRedirect(LOGIN_URL)
+            return PermissionDenied('reply_by_anonymous')
         form = self.get_form()
         if form.is_valid():
             return self.form_valid(form)
@@ -96,20 +94,13 @@ class AnnouncementCreate(LoginRequiredMixin, CreateView):
         return context
 
 
-class AnnouncementUpdate(LoginRequiredMixin, UpdateView):
+class AnnouncementUpdate(LoginRequiredMixin, OwnerOrAdminAnnounceCheckMixin, UpdateView):
     model = Announcement
-    raise_exception = True
     form_class = AnnouncementForm
     template_name = 'billboard/announcement_edit.html'
 
-    def form_valid(self, form):
-        if self.request.user != self.object.author_ann:
-            raise PermissionDenied('not_author_of_ann')
-        return super().form_valid(form)
 
-
-class AnnouncementDelete(LoginRequiredMixin, OwnerOrAdminAnnouncePermissionCheck, DeleteView):
-    permission_required = ''
+class AnnouncementDelete(LoginRequiredMixin, OwnerOrAdminAnnounceCheckMixin, DeleteView):
     model = Announcement
     template_name = 'billboard/announcement_delete.html'
     success_url = reverse_lazy('announcement_list')
@@ -231,7 +222,7 @@ class ReplyDelete(LoginRequiredMixin, DeleteView):
         announcement = self.object.announcement
         success_url = self.get_success_url()
         self.object.delete()
-        announcement.count_replies()
+        announcement.count_replies()  # Пересчитываем количество
         return HttpResponseRedirect(success_url)
 
 
@@ -273,7 +264,7 @@ class NewsLetterList(ListView):
         return context
 
 
-class NewsLetterDetail(LoginRequiredMixin, DetailView):
+class NewsLetterDetail(DetailView):
     model = Newsletter
     context_object_name = 'newsletter_detail'
     template_name = 'billboard/newsletter_detail.html'
@@ -282,7 +273,9 @@ class NewsLetterDetail(LoginRequiredMixin, DetailView):
         return reverse('newsletter_detail.html', kwargs={'pk': self.kwargs['pk']})
 
 
-class NewsLetterCreate(LoginRequiredMixin, CreateView):
+class NewsLetterCreate(PermissionRequiredMixin, CreateView):
+    permission_required = 'billboard.add_newsletter'
+    permission_denied_message = 'only_managers'
     model = Newsletter
     form_class = NewsLetterForm
     template_name = 'billboard/newsletter_create.html'
@@ -293,7 +286,9 @@ class NewsLetterCreate(LoginRequiredMixin, CreateView):
         return context
 
 
-class NewsLetterUpdate(LoginRequiredMixin, UpdateView):
+class NewsLetterUpdate(PermissionRequiredMixin, UpdateView):
+    permission_required = 'billboard.edit_newsletter'
+    permission_denied_message = 'only_managers'
     model = Newsletter
     raise_exception = True
     form_class = NewsLetterForm
@@ -305,7 +300,9 @@ class NewsLetterUpdate(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-class NewsLetterDelete(LoginRequiredMixin, DeleteView):
+class NewsLetterDelete(PermissionRequiredMixin, DeleteView):
+    permission_required = 'billboard.delete_newsletter'
+    permission_denied_message = 'only_managers'
     model = Newsletter
     template_name = 'billboard/newsletter_delete.html'
     success_url = reverse_lazy('newsletter_list')

@@ -73,6 +73,7 @@
                         {% endif %}Поиск по объявлениям</a>
                     </li>
                     <hr>
+                    {% if request.user.is_authenticated %}
                     <li {% if reply_my_list_selected %}
                             class="colorlib-active"><a href="{% url 'reply_my_list' %}">
                         {% else %}
@@ -85,6 +86,7 @@
                             ><a href="{% url 'reply_forme_list' %}">
                         {% endif %}Отлики для меня</a>
                     </li>
+                    {% endif %}
 				</ul>
 			</nav>
 
@@ -92,7 +94,7 @@
 				<h1 id="colorlib-logo" class="mb-4"><a href="{% url 'announcement_list' %}" style="background-image: url({% static 'billboard/images/bg_1.jpg' %});">Play&<span>Win</span></a></h1>
                 {% if request.user.is_authenticated %}
                     <p class="pfooter">
-                        <span>Добро пожаловать, {% user_display user %}</span><br>
+                        <span>Добро пожаловать, <b>{% user_display user %}</b></span><br>
                         <span><i class="" aria-hidden="true"></i><a href="{% url 'account_logout' %}">Выйти</a></span>
                 {% else %}
                     <p class="pfooter">

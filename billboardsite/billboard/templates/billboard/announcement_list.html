@@ -17,7 +17,8 @@
         {% isupdated announcement.pk as isupdated %}
 			    			<div class="col-md-12">
 									<div class="blog-entry ftco-animate d-md-flex">
-										<div class="text text-2 pl-md-4" style="width: 100%;">
+                                        <a href="{% url 'announcement_detail' pk=announcement.pk %}" class="img img-2" style="background-image: url({% static 'billboard/images/image_2.jpg' %});"></a>
+										<div class="text text-2 pl-md-4">
 				              <h3 class="mb-2"><a href="{% url 'announcement_detail' pk=announcement.pk %}">{{ announcement.title }}</a></h3>
                             <div class="meta-wrap">
                                   <p class="meta" style="margin-bottom: 0rem">

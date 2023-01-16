@@ -47,11 +47,16 @@
                         <hr>
 		            <p style="font-size: 30px">
                         {% if exception == 'not_author_of_ann' %}
-                            Вы можете редактировать только свои объявления
+                            Вы можете редактировать или удалять только свои объявления
                         {% elif exception == 'reply_for_yourself_ann' %}
                             Нельзя оставлять отклики на свои объявления
                         {% elif exception == 'action_with_yourself_reply' %}
                             Нельзя принимать/отклонять отлики может только хозяин объявления
+                        {% elif exception == 'reply_by_anonymous' %}
+                            Не авторизированным пользователям нельзя оставлять отлики.
+                            Пожалуйста, произведите <a href="{% url 'account_login' %}" >вход</a>
+                        {% elif exception == 'only_managers' %}
+                            Новости могут публиковать только администраторы. <a href="mailto: admin@admin.ru">Напишите нам</a>!
                         {% endif %}
                     </p>
 	                    </div>
