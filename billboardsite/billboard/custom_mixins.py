@@ -4,14 +4,14 @@ from django.forms.widgets import CheckboxInput
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
 from .models import *
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import  LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 
 
 class OwnerOrAdminAnnounceCheckMixin(View):
 
     def form_valid(self, form):
-        if self.request.user != self.object.author_ann:
+        if (not self.request.user.is_superuser) and self.request.user != self.object.author_ann:
             raise PermissionDenied('not_author_of_ann')
         return super().form_valid(form)
 

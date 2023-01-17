@@ -3,7 +3,7 @@ from django.contrib.auth.models import User, Group
 from django.urls import reverse_lazy, reverse
 
 from billboardsite.settings import SITE_URL
-from .models import Newsletter, Reply
+from .models import Newsletter, Reply, UserProfile
 from .utils import sendsimplemail
 
 
@@ -19,6 +19,9 @@ def new_user_actions_async(user_id):
     # Добавление пользователя в группу 'common_users'
     common_group = Group.objects.get(name='common_users')
     common_group.user_set.add(user)
+
+    # Добавление профиля по умолчанию
+    UserProfile.objects.get_or_create(user=user, nickname=user.username)
 
 
 @shared_task

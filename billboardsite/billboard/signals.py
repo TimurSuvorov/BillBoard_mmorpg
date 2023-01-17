@@ -14,14 +14,10 @@ def new_user_actions(sender, instance, **kwargs):
 
 
 @receiver(post_save, sender=Reply)
-def new_reply_mail(sender, instance, **kwargs):
+def reply_change_mail(sender, instance, **kwargs):
     if kwargs['created']:
         new_reply_mail_mail_async.delay(pk=instance.pk)
-
-
-@receiver(post_save, sender=Reply)
-def reply_approved_mail(sender, instance, **kwargs):
-    if instance.is_approved == 'approved':
+    elif instance.is_approved == 'approved':
         reply_approved_mail_async.delay(pk=instance.pk)
 
 

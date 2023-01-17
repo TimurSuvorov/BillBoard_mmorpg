@@ -3,7 +3,7 @@ from django.forms.widgets import CheckboxInput
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
 from billboard.custom_mixins import CommonForm
-from billboard.models import Category, Announcement, Reply, Newsletter
+from billboard.models import Category, Announcement, Reply, Newsletter, UserProfile
 
 
 class AnnouncementForm(CommonForm):
@@ -35,4 +35,8 @@ class ReplyForm(forms.ModelForm):
         fields = ['content']
 
 
+class UserProfileForm(forms.ModelForm):
 
+    class Meta:
+        model = UserProfile
+        fields = ['nickname', 'aboutme', 'timezone', 'is_replies_alerts', 'is_news_subscribe']

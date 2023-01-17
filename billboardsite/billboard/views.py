@@ -1,3 +1,4 @@
+from allauth.account.views import ConfirmEmailView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.models import Group
@@ -12,7 +13,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 
 from .custom_mixins import OwnerOrAdminAnnounceCheckMixin
 from .filters import AnnouncementFilter, ReplyFilter, AnnouncementSearchFilter
-from .forms import AnnouncementForm, ReplyForm, NewsLetterForm
+from .forms import AnnouncementForm, ReplyForm, NewsLetterForm, UserProfileForm
 from .models import *
 from .utils import check_perm_reply_action, check_perm_reply_add
 
@@ -308,4 +309,23 @@ class NewsLetterDelete(PermissionRequiredMixin, DeleteView):
     model = Newsletter
     template_name = 'billboard/newsletter_delete.html'
     success_url = reverse_lazy('newsletter_list')
+
+
+# UserProfile related Views
+class UserProfileUpdate(LoginRequiredMixin, UpdateView):
+    model = UserProfile
+    form_class = UserProfileForm
+    template_name = 'billboard/userprofile_edit.html'
+    success_url = reverse_lazy('newsletter_list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['userprofile_edit_selected'] = 1
+        return context
+
+# Additional Views
+def confirmationproccessing(request):
+    if request.method == 'POST':
+        key = request.POST.get('key')
+        return HttpResponseRedirect(reverse_lazy('account_confirm_email', kwargs={'key': key}))
 

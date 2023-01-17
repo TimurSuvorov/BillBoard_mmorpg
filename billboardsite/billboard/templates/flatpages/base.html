@@ -1,4 +1,5 @@
 {% load static %}
+{% load custom_filters %}
 {% load custom_tags %}
 {% load account %}
 {% load socialaccount %}
@@ -60,20 +61,20 @@
                             ><a href="{% url 'announcement_list' %}">
                         {% endif %}Все объявления</a>
                     </li>
-					<li {% if announcement_create_selected %}
-                            class="colorlib-active"><a href="{% url 'announcement_create' %}">
-                        {% else %}
-                            ><a href="{% url 'announcement_create' %}">
-                        {% endif %}Новое объявление</a>
-                    </li>
 					<li {% if announcement_search_selected %}
                             class="colorlib-active"><a href="{% url 'announcement_search' %}">
                         {% else %}
                             ><a href="{% url 'announcement_search' %}">
                         {% endif %}Поиск по объявлениям</a>
                     </li>
-                    <hr>
                     {% if request.user.is_authenticated %}
+                    <li {% if announcement_create_selected %}
+                            class="colorlib-active"><a href="{% url 'announcement_create' %}">
+                        {% else %}
+                            ><a href="{% url 'announcement_create' %}">
+                        {% endif %}Новое объявление</a>
+                    </li>
+                    <hr>
                     <li {% if reply_my_list_selected %}
                             class="colorlib-active"><a href="{% url 'reply_my_list' %}">
                         {% else %}
@@ -85,6 +86,13 @@
                         {% else %}
                             ><a href="{% url 'reply_forme_list' %}">
                         {% endif %}Отлики для меня</a>
+                    </li>
+                    <hr>
+                    <li {% if userprofile_edit_selected %}
+                            class="colorlib-active"><a href="{% url 'userprofile_edit' request.user.username|usernametoid %}">
+                        {% else %}
+                            ><a href="{% url 'userprofile_edit' request.user.username|usernametoid %}">
+                        {% endif %}Редактирование профиля</a>
                     </li>
                     {% endif %}
 				</ul>

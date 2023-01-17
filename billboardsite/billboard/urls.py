@@ -24,6 +24,9 @@ urlpatterns = [
     path('newsletters/create', NewsLetterCreate.as_view(), name='newsletter_create'),
     path('newsletters/<int:pk>/edit', NewsLetterUpdate.as_view(), name='newsletter_edit'),
     path('newsletters/<int:pk>/delete', NewsLetterDelete.as_view(), name='newsletter_delete'),
+    path('userprofile/<int:pk>/edit', UserProfileUpdate.as_view(), name='userprofile_edit'),
+
+    path('customconfirmation/', confirmationproccessing, name='confirmationproccessing')
 ]
 
 

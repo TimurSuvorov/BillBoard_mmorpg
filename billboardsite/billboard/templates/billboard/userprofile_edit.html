@@ -2,18 +2,18 @@
 
 {% load static %}
 {% load custom_tags %}
+{% load custom_filters %}
 
-{% block title %}
-    Редактирование новости для рассылки
-{% endblock title %}
+{% load crispy_forms_tags %}
 
 {% block category %}
     {% tag_categories_block %}
 {% endblock category %}
 
+
 {% block announcement %}
     <div class="col-md-12">
-        <h1 class="mb-2">Редактирование новости для рассылки</h1>
+        <h1 class="mb-2">Редактирование профиля</h1>
     </div>
 
 
@@ -28,10 +28,15 @@
             </div>
             {% endfor %}
             <div class="row justify-content-center">
-                <input type="submit" class="btn btn-success" value="Изменить" />&nbsp;
-                <a href="{% url 'newsletter_list' %}" class="btn btn-outline-secondary">Отмена</a>
+                <input type="submit" class="btn btn-success" value="Применить" />
+                &nbsp;
+                <a href="#" onclick="history.back();return false;" class="btn btn-outline-secondary" >Отмена</a>&nbsp;
             </div>
         </form>
 </div>
 
 {% endblock announcement %}
+
+{% block lastnewsletters %}
+    {% tags_lastnewsletters_block %}
+{% endblock lastnewsletters %}

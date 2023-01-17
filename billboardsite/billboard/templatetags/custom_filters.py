@@ -1,6 +1,7 @@
 import re
 
 from django import template
+from django.contrib.auth.models import User
 
 register = template.Library()
 
@@ -12,3 +13,7 @@ def status_translate(status_value):
     }
 
     return status_dict[status_value]
+
+@register.filter()
+def usernametoid(username):
+    return User.objects.get(username=username).pk

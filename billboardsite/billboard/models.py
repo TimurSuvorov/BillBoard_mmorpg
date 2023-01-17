@@ -164,9 +164,6 @@ class UserProfile(models.Model):
                                 on_delete=models.CASCADE,
                                 primary_key=True,
                                 )
-    verification_code = models.IntegerField(default=None,
-                                            verbose_name='Код верификации',
-                                            )
     nickname = models.CharField(max_length=64,
                                 unique=True,
                                 blank=False,
@@ -175,22 +172,23 @@ class UserProfile(models.Model):
                                             ],
                                 help_text='Никнейм должен быть буквенно-цифровым и начинаться с букву',
                                 verbose_name='Никнейм',
-                                default=None,
                                 )
     aboutme = models.CharField(max_length=1024,
-                               default=None
+                               blank=True,
+                               verbose_name='Описание',
                                )
     timezone = models.CharField(max_length=64,
                                 choices=TIMEZONES,
                                 default='UTC',
                                 verbose_name='Timezone',
                                 )
-    is_declains_display = models.BooleanField(default=True,
-                                              verbose_name='Показать удаленные отлики',)
     is_replies_alerts = models.BooleanField(default=True,
                                             verbose_name='Оповещение новых отликов')
     is_news_subscribe = models.BooleanField(default=True,
                                             verbose_name='Подписка на рассылку')
+
+    def __str__(self):
+        return f'{self.user.username}Profile'
 
     class Meta:
         verbose_name = 'Профиль пользователя'
