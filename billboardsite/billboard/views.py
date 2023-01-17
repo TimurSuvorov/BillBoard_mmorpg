@@ -14,7 +14,6 @@ from .custom_mixins import OwnerOrAdminAnnounceCheckMixin
 from .filters import AnnouncementFilter, ReplyFilter, AnnouncementSearchFilter
 from .forms import AnnouncementForm, ReplyForm, NewsLetterForm
 from .models import *
-from .signals import reply_approved_signal
 from .utils import check_perm_reply_action, check_perm_reply_add
 
 
@@ -46,7 +45,7 @@ class AnnouncementDetail(DetailView, FormMixin):
     template_name = 'billboard/announcement_detail.html'
 
     def get(self, request, *args, **kwargs):
-        render_to_response = super(AnnouncementDetail, self).get(request, *args, **kwargs)
+        render_to_response = super().get(request, *args, **kwargs)
         self.object.pageviews_plus()
         return render_to_response
 
@@ -134,9 +133,7 @@ def reply_approve(request, pk):
     check_perm_reply_action(request, reply)
     reply.is_approved = 'approved'
     reply.save()
-    reply_approved_signal.send_robust(sender=Reply, instance=reply, path=request.META['HTTP_REFERER'])
-
-    return HttpResponseRedirect(reverse('announcement_detail', kwargs={'pk': reply.announcement.pk}))
+    return HttpResponseRedirect(reverse('reply_forme_list'))
 
 
 @login_required
@@ -145,7 +142,7 @@ def reply_declain(request, pk):
     check_perm_reply_action(request, reply)
     reply.is_approved = 'declained'
     reply.save()
-    return HttpResponseRedirect(reverse('announcement_detail', kwargs={'pk': reply.announcement.pk}))
+    return HttpResponseRedirect(reverse('reply_forme_list'))
 
 
 @login_required
@@ -154,7 +151,7 @@ def reply_reset(request, pk):
     check_perm_reply_action(request, reply)
     reply.is_approved = 'no_status'
     reply.save()
-    return HttpResponseRedirect(reverse('announcement_detail', kwargs={'pk': reply.announcement.pk}))
+    return HttpResponseRedirect(reverse('reply_forme_list'))
 
 
 class AnnWithReplyForMeList(LoginRequiredMixin, ListView):
@@ -268,6 +265,11 @@ class NewsLetterDetail(DetailView):
     model = Newsletter
     context_object_name = 'newsletter_detail'
     template_name = 'billboard/newsletter_detail.html'
+
+    def get(self, request, *args, **kwargs):
+        render_to_response = super().get(request, *args, **kwargs)
+        self.object.pageviews_plus()
+        return render_to_response
 
     def get_success_url(self):
         return reverse('newsletter_detail.html', kwargs={'pk': self.kwargs['pk']})

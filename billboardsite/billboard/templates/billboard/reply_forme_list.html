@@ -27,8 +27,8 @@
         </div>
     </div>
 <!-- START replies-list -->
-    {% for reply in announcement.replies.all %}
     <div class="pt-5 mt-5">
+    {% for reply in announcement.replies.all %}
         <ul class="comment-list">
               <li class="comment">
                     <div class="vcard bio">
@@ -59,8 +59,8 @@
                 </div>
             {% endfor %}
 
-		              </ul>
-                </div>
+        </ul>
+    </div>
 <!-- END replies-list -->
     {% empty %}
         <div class="col-md-12">
@@ -115,7 +115,7 @@
                 <p><label class="form-label" for="{{ filtered_queryset.form.category.id_for_label }}">Категории: </label>{{ filtered_queryset.form.category }}</p>
                 <div class="form-error">{{ field.errors }}</div>
                 <div>
-                    <button type="submit">Применить</button>
+                    <button type="submit" class="btn btn-primary">Применить</button>
                 </div>
             </fieldset>
           </form>

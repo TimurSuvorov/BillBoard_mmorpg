@@ -19,7 +19,8 @@
             <p class="meta">
                 <span style="font-size: 11px; margin-right: 5px"><i class="icon-calendar mr-1"></i>{{ newsletter_detail.time_create|date:'d.m.y' }}</span>
                 <span style="font-size: 11px; margin-right: 5px"><a href="#"><i class="icon-folder-o mr-1"></i>{{ newsletter_detail.category }}</a></span>
-                {% if request.user == newsletter_detail.author_ann or request.user.is_superuser %}
+                <span style="font-size: 11px; margin-right: 5px"><i class="icon-eye" title="Просмотры"></i>&nbsp;{{ newsletter_detail.pageviews }}</span>
+            {% if request.user == newsletter_detail.author_ann or request.user.is_superuser %}
             <p>
                 <span style="font-size: 12px"><a href="{% url 'newsletter_edit' newsletter_detail.pk %}" style="color: green"><i class="icon-edit"></i>Изменить</a></span>
                 <span style="font-size: 12px; margin-left: 5px;"><a href="{% url 'newsletter_delete' newsletter_detail.pk %}" style="color: red"><i class="icon-remove"></i>Удалить</a></span>

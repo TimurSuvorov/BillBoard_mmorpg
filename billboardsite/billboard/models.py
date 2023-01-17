@@ -1,6 +1,6 @@
 import pytz as pytz
 from django.contrib.auth.models import User
-from django.core.validators import MinLengthValidator, RegexValidator, MaxLengthValidator
+from django.core.validators import MinLengthValidator, RegexValidator
 from django.db import models
 from django.urls import reverse
 
@@ -90,7 +90,6 @@ class Reply(models.Model):
         ('no_status', 'Без статуса')
     ]
 
-
     announcement = models.ForeignKey(to=Announcement,
                                      related_name='replies',
                                      on_delete=models.CASCADE)
@@ -139,11 +138,18 @@ class Newsletter(models.Model):
     time_create = models.DateTimeField(auto_now_add=True,
                                        verbose_name='Дата создания')
 
+    pageviews = models.PositiveBigIntegerField(default=0, verbose_name='Количество просмотров')
+
     def __str__(self):
         return f'{self.title}'
 
     def newsletter_preview(self):
         return f'{self.title[:60]}...'
+
+    def pageviews_plus(self):
+        self.pageviews += 1
+        self.save()
+        return self.pageviews
 
     def get_absolute_url(self):
         return reverse('newsletter_list')
@@ -157,7 +163,8 @@ class UserProfile(models.Model):
     nickname = models.CharField(max_length=64,
                                 blank=False,
                                 validators=[RegexValidator(r'^[a-zA-Z]+[0-9a-zA-Z]*$',
-                                                          'Никнейм должен быть буквенно-цифровым и начинаться с букву')],
+                                                           'Никнейм должен быть буквенно-цифровым и начинаться с букву')
+                                            ],
                                 help_text='Никнейм должен быть буквенно-цифровым и начинаться с букву',
                                 verbose_name='Никнейм'
                                 )
@@ -176,4 +183,3 @@ class UserProfile(models.Model):
     class Meta:
         verbose_name = 'Профиль пользователя'
         verbose_name_plural = 'Профиль пользователя'
-

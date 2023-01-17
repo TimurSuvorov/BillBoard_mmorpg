@@ -20,6 +20,7 @@
                                   <p class="meta" style="margin-bottom: 0rem">
                                     <span><i class="icon-calendar mr-1"></i>{{ newsletter.time_create|date:'d/m/y H:i' }}</span>
                                     <span><i class="icon-folder-o mr-1"></i>{{ newsletter.category }}</span>
+                                    <span><i class="icon-eye" title="Просмотры"></i>&nbsp;{{ newsletter.pageviews }}</span>
                                   </p>
 			              	</div>
 				              <p class="mb-4">{{ newsletter.content|striptags|safe|truncatechars:100 }}</p>
