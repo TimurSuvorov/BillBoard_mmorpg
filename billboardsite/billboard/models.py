@@ -105,7 +105,7 @@ class Reply(models.Model):
                                    verbose_name='Одобрение'
                                    )
     author_repl = models.ForeignKey(to=User,
-                                    on_delete=models.SET('Lost(deleted) Stranger'),
+                                    on_delete=models.CASCADE,
                                     related_name='auth_replies',
                                     verbose_name='Автор отликов')
 
@@ -160,21 +160,33 @@ class Newsletter(models.Model):
 
 
 class UserProfile(models.Model):
+    user = models.OneToOneField(User,
+                                on_delete=models.CASCADE,
+                                primary_key=True,
+                                )
+    verification_code = models.IntegerField(default=None,
+                                            verbose_name='Код верификации',
+                                            )
     nickname = models.CharField(max_length=64,
+                                unique=True,
                                 blank=False,
                                 validators=[RegexValidator(r'^[a-zA-Z]+[0-9a-zA-Z]*$',
                                                            'Никнейм должен быть буквенно-цифровым и начинаться с букву')
                                             ],
                                 help_text='Никнейм должен быть буквенно-цифровым и начинаться с букву',
-                                verbose_name='Никнейм'
+                                verbose_name='Никнейм',
+                                default=None,
                                 )
-    aboutme = models.CharField(max_length=1024)
+    aboutme = models.CharField(max_length=1024,
+                               default=None
+                               )
     timezone = models.CharField(max_length=64,
                                 choices=TIMEZONES,
                                 default='UTC',
-                                verbose_name='Timezone')
+                                verbose_name='Timezone',
+                                )
     is_declains_display = models.BooleanField(default=True,
-                                              verbose_name='Показать удаленные отлики')
+                                              verbose_name='Показать удаленные отлики',)
     is_replies_alerts = models.BooleanField(default=True,
                                             verbose_name='Оповещение новых отликов')
     is_news_subscribe = models.BooleanField(default=True,
