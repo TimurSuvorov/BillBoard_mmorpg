@@ -85,7 +85,7 @@ class AnnouncementCreate(LoginRequiredMixin, CreateView):
     template_name = 'billboard/announcement_create.html'
 
     def form_valid(self, form):
-        form.instance.author_ann = User.objects.get(username=self.request.user)
+        form.instance.author_ann = self.request.user
         return super().form_valid(form)
 
     def get_context_data(self, *, object_list=None, **kwargs):
