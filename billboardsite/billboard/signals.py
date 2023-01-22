@@ -9,7 +9,7 @@ from .tasks import newsletter_mail_async, reply_approved_mail_async, new_user_ac
 # Сигнал нового пользователя(прохождение верификации)
 @receiver(post_save, sender=EmailAddress)
 def new_user_actions(sender, instance, **kwargs):
-    if instance.verified:  # Когда проведена верификация по email
+    if instance.verified:
         new_user_actions_async.delay(user_id=instance.user_id)
 
 

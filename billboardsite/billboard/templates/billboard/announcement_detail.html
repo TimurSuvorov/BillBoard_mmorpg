@@ -17,7 +17,7 @@
         <h1 class="mb-2">{{ announcement_detail.title }}</h1>
         <div class="meta-wrap">
             <p class="meta">
-                <span style="font-size: 11px; margin-right: 5px"><i class="icon-face mr-1"></i>Автор: {{ announcement_detail.author_ann }}</span>
+                <span style="font-size: 11px; margin-right: 5px"><i class="icon-face mr-1"></i>Автор: {{ announcement_detail.author_ann.userprofile.nickname }}</span>
                 <span style="font-size: 11px; margin-right: 5px"><i class="icon-calendar mr-1"></i>{% if isupdated %}Обновлено{% else %}Создано{% endif %}: {{ announcement_detail.time_create|date:'d/m/y H:i' }}</span>
                 <span style="font-size: 11px; margin-right: 5px"><a href="#"><i class="icon-folder-o mr-1"></i>{{ announcement_detail.category }}</a></span>
                 <span style="font-size: 11px; margin-right: 5px"><i class="icon-comment2 mr-1" title="Отлики"></i>{{ announcement_detail.replies.all.count }}</span>
@@ -55,7 +55,7 @@
                   <p>{{ reply.content }}</p>
                   {% if request.user == reply.author_repl %}
                     <p><a href="{% url 'reply_delete' pk=reply.pk %}" class="reply">Удалить</a></p>
-                  {% elif request.user == announcement_detail.author_ann and request.user != reply.author_repl %}
+                  {% elif request.user == announcement_detail.author_ann.userprofile.nickname and request.user != reply.author_repl %}
                     <p>
                     {% if reply.is_approved != 'approved' %}
                        <a href="{% url 'reply_approve' pk=reply.pk %}" class="reply" style="background: #c0f6c9">Принять</a>

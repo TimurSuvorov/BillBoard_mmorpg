@@ -186,9 +186,11 @@ class UserProfile(models.Model):
                                 verbose_name='Timezone',
                                 )
     is_replies_alerts = models.BooleanField(default=True,
-                                            verbose_name='Оповещение новых отликов')
+                                            verbose_name='Оповещение о новых отликах')
+    appr_replies_alerts = models.BooleanField(default=True,
+                                              verbose_name='Оповещение о принятии отлика')
     is_news_subscribe = models.BooleanField(default=True,
-                                            verbose_name='Подписка на рассылку')
+                                            verbose_name='Подписка на новостную рассылку')
 
     def __str__(self):
         return f'{self.user.username}Profile'
