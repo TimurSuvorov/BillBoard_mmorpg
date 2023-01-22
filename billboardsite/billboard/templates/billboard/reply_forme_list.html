@@ -35,7 +35,7 @@
                       <img src="{% static 'billboard/images/person_1.jpg' %}" alt="Image placeholder">
                     </div>
                 <div class="comment-body">
-                  <h5 style="margin-bottom: 0">{{ reply.author_repl }}</h5>
+                  <h5 style="margin-bottom: 0">{{ reply.author_repl.userprofile.nickname }}</h5>
                   <div class="meta">{{ reply.time_update|date:'d.m.y H:i' }}
                       <i class="icon-publish" style='color: black; font-size: 11px; font-family: "Poppins", Arial, sans-serif '>Статус: {{ reply.is_approved|status_translate }}</i>
                   </div>

@@ -41,9 +41,11 @@
 </style>
 
                                 <!-- SEARCH START -->
+
 <form action="" method="get" style="width: 100%; margin-bottom: 3rem;">
     <fieldset>
     <legend class="filtered">Поиск по объявлениям:</legend>
+    {{ filtered_queryset.form.non_field_errors }}
     <div class="form-group">
         {{ filtered_queryset.form.title|as_crispy_field }}
     </div>
@@ -80,7 +82,7 @@
 				              <h3 class="mb-2"><a href="{% url 'announcement_detail' pk=announcement.pk %}">{{ announcement.title }}</a></h3>
                             <div class="meta-wrap">
                                   <p class="meta">
-                                    <span><i class="icon-face mr-1"></i>Автор: {{ announcement.author_ann }}</span>
+                                    <span><i class="icon-face mr-1"></i>Автор: {{ announcement.author_ann.userprofile.nickname }}</span>
                                     <span><i class="icon-calendar mr-1"></i>{% if isupdated %}Обновлено: {{ announcement.time_update|date:'d/m/y H:i' }}{% else %}Создано: {{ announcement.time_create|date:'d/m/y H:i' }}{% endif %}</span>
                                     <span><a href="{% url 'announcement_by_category' pk=announcement.category.pk  %}"><i class="icon-folder-o mr-1"></i>{{ announcement.category }}</a></span>
 				              		<span><i class="icon-comment2 mr-1" title="Отлики"></i>{{ announcement.replies.all.count }}</span>

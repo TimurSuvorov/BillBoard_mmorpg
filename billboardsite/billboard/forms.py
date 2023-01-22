@@ -40,8 +40,8 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ['nickname', 'aboutme', 'timezone', 'is_replies_alerts', 'is_news_subscribe']
-        widget = {
-            'aboutme': forms.Textarea(attrs={
+        widgets = {
+            'aboutme': forms.Textarea(attrs={'placeholder': 'Немного о себе...',
                                              'rows': '2',
                                              'cols': '85%'
                                              })

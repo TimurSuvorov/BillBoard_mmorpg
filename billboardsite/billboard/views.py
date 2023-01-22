@@ -1,4 +1,5 @@
 from allauth.account.views import ConfirmEmailView
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.models import Group
@@ -318,12 +319,16 @@ class UserProfileUpdate(LoginRequiredMixin, UpdateView):
     model = UserProfile
     form_class = UserProfileForm
     template_name = 'billboard/userprofile_edit.html'
-    success_url = reverse_lazy('newsletter_list')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         context['userprofile_edit_selected'] = 1
         return context
+
+    def get_success_url(self):
+        messages.success(self.request, 'Настройки профиля применены успешно!')
+        return reverse_lazy('userprofile_edit', kwargs={'pk': self.kwargs['pk']})
+
 
 # Additional Views
 def confirmationproccessing(request):

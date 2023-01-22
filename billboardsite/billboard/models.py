@@ -12,6 +12,7 @@ TIMEZONES = list(zip(pytz.all_timezones, pytz.all_timezones))
 class Announcement(models.Model):
     title = models.CharField(max_length=254,
                              unique=True,
+                             error_messages={'unique': 'Такое объявление уже есть'},
                              db_index=True,
                              verbose_name='Заголовок')
     content = RichTextUploadingField(validators=[MinLengthValidator(4)],
@@ -123,6 +124,7 @@ class Reply(models.Model):
 class Newsletter(models.Model):
     title = models.CharField(max_length=254,
                              unique=True,
+                             error_messages={'unique': 'Новость с таким заголовком уже есть'},
                              db_index=True,
                              verbose_name='Заголовок')
     content = models.TextField(validators=[MinLengthValidator(4)],
@@ -164,8 +166,9 @@ class UserProfile(models.Model):
                                 on_delete=models.CASCADE,
                                 primary_key=True,
                                 )
-    nickname = models.CharField(max_length=64,
+    nickname = models.CharField(max_length=16,
                                 unique=True,
+                                error_messages={'unique': 'Никнейм занят'},
                                 blank=False,
                                 validators=[RegexValidator(r'^[a-zA-Z]+[0-9a-zA-Z]*$',
                                                            'Никнейм должен быть буквенно-цифровым и начинаться с букву')

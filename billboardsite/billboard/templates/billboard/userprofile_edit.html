@@ -14,6 +14,8 @@
 {% block announcement %}
     <div class="col-md-12">
         <h1 class="mb-2">Мои профиль</h1>
+
+
     </div>
 
 
@@ -21,18 +23,30 @@
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.media}}
+
             {% for field in form %}
             <div class="form-group">
                 <div><label for="{{ field.id_for_label }}" class="text-dark">{{ field.label }}: </label></div>
                 {{ field }}
+                <div class="form-error">{{ field.errors }}</div>
             </div>
             {% endfor %}
+
+            <div>
+                {% if messages %}
+                        {% for message in messages %}
+                         <p><i class="icon-info-circle">&nbsp; {{ message }}</i></p>
+                        {% endfor %}
+                {% endif %}
+            </div>
+
             <div class="row justify-content-center">
                 <input type="submit" class="btn btn-success" value="Применить" />
                 &nbsp;
-                <a href="#" onclick="history.back();return false;" class="btn btn-outline-secondary" >Отмена</a>&nbsp;
+                <a href="#" onclick="history.back();return false;" class="btn btn-outline-secondary" >Назад</a>&nbsp;
             </div>
         </form>
+
 </div>
 
 {% endblock announcement %}

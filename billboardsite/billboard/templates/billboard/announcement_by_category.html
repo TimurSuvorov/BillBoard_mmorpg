@@ -22,7 +22,7 @@
 				              <h3 class="mb-2"><a href="{% url 'announcement_detail' pk=announcement.pk %}">{{ announcement.title }}</a></h3>
                             <div class="meta-wrap">
                                   <p class="meta">
-                                    <span><i class="icon-face mr-1"></i>Автор: {{ announcement.author_ann }}</span>
+                                    <span><i class="icon-face mr-1"></i>Автор: {{ announcement.author_ann.userprofile.nickname }}</span>
                                     <span><i class="icon-calendar mr-1"></i>{% if isupdated %}Обновлено{% else %}Создано{% endif %}: {{ announcement.time_create|date:'d/m/y H:i' }}</span>
                                     <span><a href="#"><i class="icon-folder-o mr-1"></i>{{ announcement.category }}</a></span>
 				              		<span><i class="icon-comment2 mr-1" title="Отлики"></i>{{ announcement.replies.all.count }}</span>
