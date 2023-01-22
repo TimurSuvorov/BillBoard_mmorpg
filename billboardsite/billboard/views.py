@@ -171,7 +171,9 @@ class AnnWithReplyForMeList(LoginRequiredMixin, ListView):
         cat_list = self.queryset_ann.values_list('category__id', flat=True)
         self.queryset_cat = Category.objects.filter(id__in=cat_list)
         # Применяем фильтр
-        self.filtered_queryset = ReplyFilter(self.queryset_cat, self.request.GET, self.queryset_ann)
+        self.filtered_queryset = ReplyFilter(data=self.request.GET,
+                                             queryset=self.queryset_ann,
+                                             queryset_cat=self.queryset_cat,)
         return self.filtered_queryset.qs
 
     def get_context_data(self, *, object_list=None, **kwargs):

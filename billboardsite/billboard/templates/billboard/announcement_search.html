@@ -108,3 +108,28 @@
 {% block lastnewsletters %}
     {% tags_lastnewsletters_block %}
 {% endblock lastnewsletters %}
+
+{% block paginator %}
+{# Если объявлений больше, чем количества на страницу #}
+{% if paginator.count > paginator.per_page %}
+    <div class="row">
+        <div class="col">
+            <div class="block-27">
+                <ul>
+    {# Предыдущая страница #}
+        {% if page_obj.has_previous %}
+            <li><a href="?page={{ page_obj.previous_page_number }}">&lt;</a></li>
+        {% endif %}
+    {# Текущая страница #}
+        <li class="active"><span>{{ page_obj.number }}</span></li>
+    {# Следующая страница #}
+        {% if page_obj.has_next %}
+            <li><a href="?page={{ page_obj.next_page_number }}">&gt;</a></li>
+        {% endif %}
+                  </ul>
+            </div>
+          </div>
+        </div>
+{% endif %}
+
+{% endblock paginator %}
