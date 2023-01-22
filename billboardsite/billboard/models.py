@@ -139,7 +139,10 @@ class Newsletter(models.Model):
                                   verbose_name='Отправлено')
     time_create = models.DateTimeField(auto_now_add=True,
                                        verbose_name='Дата создания')
-
+    author_news = models.ForeignKey(to=User,
+                                    on_delete=models.CASCADE,
+                                    related_name='auth_newsletters',
+                                    verbose_name='Автор новостей')
     pageviews = models.PositiveBigIntegerField(default=0, verbose_name='Количество просмотров')
 
     def __str__(self):

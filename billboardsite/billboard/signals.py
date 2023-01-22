@@ -2,8 +2,7 @@ from allauth.account.models import EmailAddress
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from .models import *
-from .tasks import newsletter_mail_async, reply_approved_mail_async, new_user_actions_async, new_reply_mail_mail_async
+from .tasks import *
 
 
 # Сигнал нового пользователя(прохождение верификации)
@@ -16,7 +15,7 @@ def new_user_actions(sender, instance, **kwargs):
 @receiver(post_save, sender=Reply)
 def reply_change_mail(sender, instance, **kwargs):
     if kwargs['created']:
-        new_reply_mail_mail_async.delay(pk=instance.pk)
+        new_reply_mail_async.delay(pk=instance.pk)
     elif instance.is_approved == 'approved':
         reply_approved_mail_async.delay(pk=instance.pk)
 

@@ -57,6 +57,7 @@ class ReplyFilter(django_filters.FilterSet):
         model = Announcement
         fields = ['title', 'category']
 
+
 class AnnouncementSearchFilter(django_filters.FilterSet):
 
     def __init__(self, queryset_auth, *args, **kwargs):
@@ -65,7 +66,7 @@ class AnnouncementSearchFilter(django_filters.FilterSet):
 
     title = django_filters.CharFilter(field_name='title',
                                       lookup_expr='icontains',
-                                      label='Заголовок',
+                                      label='Заголовок:',
                                       widget=forms.TextInput(attrs={'type': 'search',
                                                                     'placeholder': 'Поиск в заголовке...',
                                                                     })
@@ -73,7 +74,7 @@ class AnnouncementSearchFilter(django_filters.FilterSet):
 
     content = django_filters.CharFilter(field_name='content',
                                         lookup_expr='icontains',
-                                        label='Содержание',
+                                        label='Содержание:',
                                         widget=forms.TextInput(attrs={'type': 'search',
                                                                       'placeholder': 'Поиск в содержании...',
                                                                       })
@@ -81,7 +82,7 @@ class AnnouncementSearchFilter(django_filters.FilterSet):
 
     time_create = django_filters.DateFilter(field_name='time_create',
                                             lookup_expr='gt',
-                                            label='Время публикации',
+                                            label='Время публикации:',
                                             widget=DateInput(format='%d/%m/%Y',
                                                              attrs={'type': 'date',
                                                                     'placeholder': 'Создано, начиная с...',
@@ -92,7 +93,7 @@ class AnnouncementSearchFilter(django_filters.FilterSet):
 
     time_update = django_filters.DateFilter(field_name='time_create',
                                             lookup_expr='gt',
-                                            label='Время обновления',
+                                            label='Время обновления:',
                                             widget=DateInput(format='%d/%m/%Y',
                                                              attrs={'type': 'date',
                                                                     'placeholder': 'Обновлено, начиная с...'},
@@ -102,9 +103,8 @@ class AnnouncementSearchFilter(django_filters.FilterSet):
     author_ann = django_filters.ModelMultipleChoiceFilter(queryset=None,
                                                           field_name='author_ann',
                                                           widget=forms.CheckboxSelectMultiple(),
-                                                          label='Авторы объявлений',
+                                                          label='Авторы объявлений:',
                                                           )
-
 
     class Meta:
         model = Announcement

@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>{% block title %} {% endblock title %}</title>
+    <title>{% block title %}Информация{% endblock title %}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -41,26 +41,12 @@
 	    			<div class="col-md-6 d-flex align-items-center" style="max-width: 100%">
 	    				<div class="text px-4 pt-5 pt-md-0 px-md-4 pr-md-5 ftco-animate">
                         <p style="margin-top: 10%;">
-                            <h2 class="mb-4" ><span>У вас нет прав к этому действию</span></h2>
-                            <h2 class="mb-4" ><span>(Error 403)</span></h2>
+                            <h2 class="mb-4" ><span>Информация:</span></h2>
                         </p>
                         <hr>
 		            <p style="font-size: 30px">
-                        {% if exception == 'not_author_of_ann' %}
-                            Вы можете редактировать или удалять только свои объявления
-                        {% elif exception == 'reply_for_yourself_ann' %}
-                            Нельзя оставлять отклики на свои объявления
-                        {% elif exception == 'action_with_yourself_reply' %}
-                            Нельзя принимать/отклонять отлики может только хозяин объявления
-                        {% elif exception == 'reply_by_anonymous' %}
-                            Не авторизированным пользователям нельзя оставлять отлики.
-                            Пожалуйста, произведите <a href="{% url 'account_login' %}" >вход</a>
-                        {% elif exception == 'only_newsauthors' %}
-                            Новости могут публиковать только администраторы или пользователи с правами.
-                            <a href="{% url 'request_to_newsauthors' %}">Отправьте запрос!</a>
-                        {% elif exception == 'already_in_newsauthors' %}
-                            Похоже, вы уже можете публиковать свои новости. Попробуйте.
-                        {% endif %}
+                        {{ information }} <br>
+                        Пока почитайте последние <a href="{% url 'newsletter_list' %}">новости</a> от других.
                     </p>
 	                    </div>
 		            </div>

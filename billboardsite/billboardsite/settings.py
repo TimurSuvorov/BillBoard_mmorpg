@@ -246,7 +246,12 @@ ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
 
 # Additional authorization setting
 ACCOUNT_EMAIL_SUBJECT_PREFIX = '[MMORPG Billboard]'
-# ACCOUNT_FORMS = {"signup": "accounts.forms.CustomSignUpFromallauth"}
+
+ADMINS = [('Timur_admin', 'suvorovt@gmail.com'),
+          ]
+
+MANAGERS = []
+
 LOGIN_REDIRECT_URL = '/billboard/announcements/'
 LOGOUT_REDIRECT_URL = '/billboard/announcements/'
 

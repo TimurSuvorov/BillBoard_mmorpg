@@ -24,6 +24,10 @@ urlpatterns = [
     path('newsletters/create', NewsLetterCreate.as_view(), name='newsletter_create'),
     path('newsletters/<int:pk>/edit', NewsLetterUpdate.as_view(), name='newsletter_edit'),
     path('newsletters/<int:pk>/delete', NewsLetterDelete.as_view(), name='newsletter_delete'),
+    path('newsletters/reqtonewsauthors', request_to_newsauthors, name='request_to_newsauthors'),
+    path('newsletters/addtonewsauthors/<int:user_id>', add_to_newsauthors, name='add_to_newsauthors'),
+    path('newsletters/declaintonewsauthors/<int:user_id>', declain_to_newsauthors, name='declain_to_newsauthors'),
+
     path('userprofile/<int:pk>/edit', UserProfileUpdate.as_view(), name='userprofile_edit'),
 
     path('customconfirmation/', confirmationproccessing, name='confirmationproccessing')

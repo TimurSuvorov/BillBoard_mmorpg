@@ -9,7 +9,7 @@ from django.urls import reverse_lazy
 from django.views.generic.edit import FormMixin
 from pprint import pprint
 from django.db.models import Q
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 from .custom_mixins import OwnerOrAdminAnnounceCheckMixin
@@ -17,6 +17,7 @@ from .filters import AnnouncementFilter, ReplyFilter, AnnouncementSearchFilter
 from .forms import AnnouncementForm, ReplyForm, NewsLetterForm, UserProfileForm
 from .models import *
 from .utils import check_perm_reply_action, check_perm_reply_add
+from .tasks import request_to_newsauthors_mail_async, added_to_newsauthors_mail_async, declain_to_newsauthors_mail_async
 
 
 # Announcement related Views
@@ -116,6 +117,7 @@ class AnnouncementSearch(ListView):
     def get_queryset(self):
         queryset_ann = Announcement.objects.filter(is_published=True).order_by('-time_update')
         queryset_auth = User.objects.filter(username__in=queryset_ann.values_list('author_ann__username', flat=True))
+        #queryset_auth = User.objects.filter(username__in=queryset_ann.values_list('author_ann__username', flat=True)).values_list('userprofile__nickname', flat=True)
         self.filtered_queryset = AnnouncementSearchFilter(data=self.request.GET,
                                                           queryset=queryset_ann,
                                                           queryset_auth=queryset_auth)
@@ -281,10 +283,14 @@ class NewsLetterDetail(DetailView):
 
 class NewsLetterCreate(PermissionRequiredMixin, CreateView):
     permission_required = 'billboard.add_newsletter'
-    permission_denied_message = 'only_managers'
+    permission_denied_message = 'only_newsauthors'
     model = Newsletter
     form_class = NewsLetterForm
     template_name = 'billboard/newsletter_create.html'
+
+    def form_valid(self, form):
+        form.instance.author_news = self.request.user
+        return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
@@ -294,24 +300,49 @@ class NewsLetterCreate(PermissionRequiredMixin, CreateView):
 
 class NewsLetterUpdate(PermissionRequiredMixin, UpdateView):
     permission_required = 'billboard.edit_newsletter'
-    permission_denied_message = 'only_managers'
+    permission_denied_message = 'only_newsauthors'
     model = Newsletter
     raise_exception = True
     form_class = NewsLetterForm
     template_name = 'billboard/newsletter_edit.html'
 
-    def form_valid(self, form):
-        if not Group.objects.get(name='managers').user_set.filter(username=self.request.user):
-            raise PermissionDenied
-        return super().form_valid(form)
-
 
 class NewsLetterDelete(PermissionRequiredMixin, DeleteView):
     permission_required = 'billboard.delete_newsletter'
-    permission_denied_message = 'only_managers'
+    permission_denied_message = 'only_newsauthors'
     model = Newsletter
     template_name = 'billboard/newsletter_delete.html'
     success_url = reverse_lazy('newsletter_list')
+
+
+@login_required
+def request_to_newsauthors(request):
+    user_newsauthors = Group.objects.filter(Q(name='managers') | Q(name='newsauthors')).values_list('user__username', flat=True)
+    if request.user in user_newsauthors:
+        raise PermissionDenied('already_in_newsauthors')
+    request_to_newsauthors_mail_async.delay(request.user.id)
+    return render(request,
+                  'billboard/infopage.html',
+                  context={'information': 'Запрос на предоставление доступа к редактированию и созданию новостей отправлен.'}
+                  )
+
+
+def add_to_newsauthors(request, user_id):
+    if not request.user.is_superuser:
+        raise PermissionDenied()
+    t_user = User.objects.get(pk=user_id)
+    Group.objects.get(name='newsauthors').user_set.add(t_user)
+    added_to_newsauthors_mail_async.delay(user_id)
+    return HttpResponseRedirect(reverse_lazy('newsletter_list'))
+
+
+def declain_to_newsauthors(request, user_id):
+    if not request.user.is_superuser:
+        raise PermissionDenied()
+    t_user = User.objects.get(pk=user_id)
+    Group.objects.get(name='newsauthors').user_set.remove(t_user)  # Удаление для перестраховки
+    declain_to_newsauthors_mail_async.delay(user_id)
+    return HttpResponseRedirect(reverse_lazy('newsletter_list'))
 
 
 # UserProfile related Views

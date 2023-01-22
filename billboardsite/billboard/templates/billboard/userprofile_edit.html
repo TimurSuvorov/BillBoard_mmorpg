@@ -40,11 +40,12 @@
                 {% endif %}
             </div>
 
-            <div class="row justify-content-center">
-                <input type="submit" class="btn btn-success" value="Применить" />
-                &nbsp;
-                <a href="#" onclick="history.back();return false;" class="btn btn-outline-secondary" >Назад</a>&nbsp;
-            </div>
+            <input type="submit" class="btn btn-success" value="Применить"/>
+            <hr>
+            {% if not perms.billboard.add_newsletter %}
+                Хочу тоже публиковать интересные новости! <a href="{% url 'request_to_newsauthors' %}">Отправить запрос администраторам.</a>
+            {% endif %}
+            &nbsp;
         </form>
 
 </div>
