@@ -115,12 +115,13 @@ class AnnouncementSearch(ListView):
     paginate_by = 6
 
     def get_queryset(self):
-        queryset_ann = Announcement.objects.filter(is_published=True).order_by('-time_update')
-        queryset_auth = User.objects.filter(username__in=queryset_ann.values_list('author_ann__username', flat=True))
-        #queryset_auth = User.objects.filter(username__in=queryset_ann.values_list('author_ann__username', flat=True)).values_list('userprofile__nickname', flat=True)
+        queryset = super().get_queryset()
+        queryset_ann = queryset.filter(is_published=True).order_by('-time_update')   # Берем только опубликованные
+        author_nickname_choices = \
+            queryset_ann.values_list('author_ann', 'author_ann__userprofile__nickname').order_by().distinct()
         self.filtered_queryset = AnnouncementSearchFilter(data=self.request.GET,
                                                           queryset=queryset_ann,
-                                                          queryset_auth=queryset_auth)
+                                                          author_choices=author_nickname_choices)
         return self.filtered_queryset.qs
 
     def get_context_data(self, *, object_list=None, **kwargs):

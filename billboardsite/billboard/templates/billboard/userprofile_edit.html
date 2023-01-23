@@ -12,6 +12,35 @@
 
 
 {% block announcement %}
+<style>
+
+.form-group {
+    margin-bottom: 0.7rem;
+}
+
+.form-control {
+    height: 35px !important;
+    width: 100%;
+    background: #fff !important;
+    color: #000000 !important;
+    font-size: 13px;
+    border-radius: 0px;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+}
+
+.form-control:focus, .form-control:active {
+    border-color: #94e80e;
+}
+
+.form-check-label {
+    margin-bottom: 0;
+    font-size: 13px;
+}
+
+</style>
+
+
     <div class="col-md-12">
         <h1 class="mb-2">Мои профиль</h1>
 
@@ -25,10 +54,11 @@
             {{ form.media}}
 
             {% for field in form %}
-            <div class="form-group">
-                <div><label for="{{ field.id_for_label }}" class="text-dark">{{ field.label }}: </label></div>
-                {{ field }}
+            <div class="form-row">
+                <div class="form-group col-6">
+                {{ field|as_crispy_field }}
                 <div class="form-error">{{ field.errors }}</div>
+                </div>
             </div>
             {% endfor %}
 
