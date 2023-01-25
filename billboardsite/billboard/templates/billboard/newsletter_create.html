@@ -26,7 +26,8 @@
             </div>
             {% endfor %}
             <div class="row justify-content-center">
-                <input type="submit" class="btn btn-info" value="Создать" />
+                <input type="submit" class="btn btn-info" style="margin-bottom: 10px" value="Создать" />
+                <a href="{% url 'newsletter_list' %}" class="btn btn-outline-secondary">Отмена</a>
             </div>
         </form>
 </div>

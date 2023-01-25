@@ -302,6 +302,7 @@
 }
 .icon-plus-circle:before {
   content: "\f055";
+  padding-left: 10px;
 }
 .icon-minus-circle:before {
   content: "\f056";

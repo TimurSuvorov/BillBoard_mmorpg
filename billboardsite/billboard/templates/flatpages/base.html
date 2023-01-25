@@ -39,6 +39,23 @@
     <link rel="stylesheet" href="{% static 'billboard/css/icomoon.css' %}">
     <link rel="stylesheet" href="{% static 'billboard/css/style.css' %}">
 
+  <style>
+      .icon-plus-circle {
+          color: rgba(0, 0, 0, 0.7);
+      }
+      .icon-plus-circle:hover {
+          color: #0a53be;
+          text-decoration: none;
+      }
+       .newsletters_row {
+          display: flex;
+          align-items: center;
+          flex-direction: row;
+      }
+       .newsletters_row i {
+           padding-left: 10px;
+       }
+  </style>
 
   </head>
   <body>
@@ -48,48 +65,51 @@
 		<aside id="colorlib-aside" role="complementary" class="js-fullheight">
 			<nav id="colorlib-main-menu" role="navigation">
 				<ul>
+                    <span class="newsletters_row">
 					<li {% if newsletter_list_selected %}
-                            class="colorlib-active"><a href="{% url 'newsletter_list' %}">
+                            class="colorlib-active"><a>
                         {% else %}
                             ><a href="{% url 'newsletter_list' %}">
                         {% endif %}Новости игр</a>
                     </li>
+                        <a href="{% url 'newsletter_create' %}"><i class="icon-plus-circle" title="Создать новое"></i></a>
+                    </span>
                     <hr>
 					<li {% if announcement_list_selected %}
-                            class="colorlib-active"><a href="{% url 'announcement_list' %}">
+                            class="colorlib-active"><a>
                         {% else %}
                             ><a href="{% url 'announcement_list' %}">
                         {% endif %}Все объявления</a>
                     </li>
 					<li {% if announcement_search_selected %}
-                            class="colorlib-active"><a href="{% url 'announcement_search' %}">
+                            class="colorlib-active"><a>
                         {% else %}
                             ><a href="{% url 'announcement_search' %}">
                         {% endif %}Поиск по объявлениям</a>
                     </li>
                     {% if request.user.is_authenticated %}
                     <li {% if announcement_create_selected %}
-                            class="colorlib-active"><a href="{% url 'announcement_create' %}">
+                            class="colorlib-active"><a>
                         {% else %}
                             ><a href="{% url 'announcement_create' %}">
                         {% endif %}Новое объявление</a>
                     </li>
                     <hr>
                     <li {% if reply_my_list_selected %}
-                            class="colorlib-active"><a href="{% url 'reply_my_list' %}">
+                            class="colorlib-active"><a>
                         {% else %}
                             ><a href="{% url 'reply_my_list' %}">
                         {% endif %}Мои отлики</a>
                     </li>
 					<li {% if reply_forme_list_selected %}
-                            class="colorlib-active"><a href="{% url 'reply_forme_list' %}">
+                            class="colorlib-active"><a>
                         {% else %}
                             ><a href="{% url 'reply_forme_list' %}">
                         {% endif %}Отлики для меня</a>
                     </li>
                     <hr>
                     <li {% if userprofile_edit_selected %}
-                            class="colorlib-active"><a href="{% url 'userprofile_edit' request.user.username|usernametoid %}">
+                            class="colorlib-active"><a>
                         {% else %}
                             ><a href="{% url 'userprofile_edit' request.user.username|usernametoid %}">
                         {% endif %}Мои профиль</a>
