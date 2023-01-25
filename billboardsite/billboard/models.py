@@ -2,6 +2,7 @@ import pytz as pytz
 from django.contrib.auth.models import User
 from django.core.validators import MinLengthValidator, RegexValidator
 from django.db import models
+from django.db.models import F
 from django.urls import reverse
 
 from ckeditor_uploader.fields import RichTextUploadingField
@@ -43,8 +44,7 @@ class Announcement(models.Model):
         return f'{self.title[:40]}...'
 
     def pageviews_plus(self):
-        self.pageviews += 1
-        self.save()
+        self.__class__.objects.update(pageviews=F('pageviews') + 1)
         return self.pageviews
 
     def count_replies(self):
@@ -149,11 +149,10 @@ class Newsletter(models.Model):
         return f'{self.title}'
 
     def newsletter_preview(self):
-        return f'{self.title[:60]}...'
+        return f'{self.title[:120]}...'
 
     def pageviews_plus(self):
-        self.pageviews += 1
-        self.save()
+        self.__class__.objects.update(pageviews=F('pageviews') + 1)
         return self.pageviews
 
     def get_absolute_url(self):

@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.models import Group
 from django.core.exceptions import PermissionDenied
+from django.db import connection
 from django.http import HttpResponseRedirect, HttpRequest
 from django.urls import reverse_lazy
 from django.views.generic.edit import FormMixin
@@ -12,7 +13,7 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
-from .custom_mixins import OwnerOrAdminAnnounceCheckMixin
+from .custom_mixins import OwnerOrAdminAnnounceCheckMixin, CustomDetailView
 from .filters import AnnouncementFilter, ReplyFilter, AnnouncementSearchFilter
 from .forms import AnnouncementForm, ReplyForm, NewsLetterForm, UserProfileForm
 from .models import *
@@ -41,16 +42,11 @@ class AnnouncementList(ListView):
         return context
 
 
-class AnnouncementDetail(DetailView, FormMixin):
+class AnnouncementDetail(CustomDetailView, FormMixin):
     model = Announcement
     form_class = ReplyForm
     context_object_name = 'announcement_detail'
     template_name = 'billboard/announcement_detail.html'
-
-    def get(self, request, *args, **kwargs):
-        render_to_response = super().get(request, *args, **kwargs)
-        self.object.pageviews_plus()
-        return render_to_response
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
@@ -268,15 +264,10 @@ class NewsLetterList(ListView):
         return context
 
 
-class NewsLetterDetail(DetailView):
+class NewsLetterDetail(CustomDetailView):
     model = Newsletter
     context_object_name = 'newsletter_detail'
     template_name = 'billboard/newsletter_detail.html'
-
-    def get(self, request, *args, **kwargs):
-        render_to_response = super().get(request, *args, **kwargs)
-        self.object.pageviews_plus()
-        return render_to_response
 
     def get_success_url(self):
         return reverse('newsletter_detail.html', kwargs={'pk': self.kwargs['pk']})
