@@ -28,7 +28,7 @@ urlpatterns = [
     path('newsletters/addtonewsauthors/<int:user_id>', add_to_newsauthors, name='add_to_newsauthors'),
     path('newsletters/declaintonewsauthors/<int:user_id>', declain_to_newsauthors, name='declain_to_newsauthors'),
 
-    path('userprofile/<int:pk>/edit', UserProfileUpdate.as_view(), name='userprofile_edit'),
+    path('userprofile/<int:pk>', UserProfileUpdate.as_view(), name='userprofile_edit'),
 
     path('customconfirmation/', confirmationproccessing, name='confirmationproccessing')
 ]

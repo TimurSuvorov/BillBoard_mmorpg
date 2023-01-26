@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.views.generic import View, DetailView
 from django.forms.widgets import CheckboxInput
@@ -14,19 +15,38 @@ class CustomDetailView(DetailView):
         object_ = get_object_or_404(self.model.objects.select_related('category'), pk=self.kwargs['pk'])
         return object_
 
-    # For increase pageviews
+    # Increase pageviews
     def get(self, request, *args, **kwargs):
         render_to_response = super().get(request, *args, **kwargs)
         self.object.pageviews_plus()
         return render_to_response
 
 
-class OwnerOrAdminAnnounceCheckMixin(View):
+class OwnerOrAdminAnnounceCheckMixin(PermissionRequiredMixin):
 
-    def form_valid(self, form):
-        if (not self.request.user.is_superuser) and self.request.user != self.object.author_ann:
+    def has_permission(self):
+        if (not self.request.user.is_superuser) and self.request.user != self.get_object().author_ann:
             raise PermissionDenied('not_author_of_ann')
-        return super().form_valid(form)
+        perms = self.get_permission_required()
+        return self.request.user.has_perms(perms)
+
+
+class OwnerOrAdminReplyCheckMixin(PermissionRequiredMixin):
+
+    def has_permission(self):
+        if (not self.request.user.is_superuser) and self.request.user != self.get_object().author_repl:
+            raise PermissionDenied('not_author_of_repl')
+        perms = self.get_permission_required()
+        return self.request.user.has_perms(perms)
+
+
+class OwnerUserProfileCheckMixin(PermissionRequiredMixin):
+
+    def has_permission(self):
+        if self.request.user != self.get_object().user:
+            raise PermissionDenied()
+        perms = self.get_permission_required()
+        return self.request.user.has_perms(perms)
 
 
 class CommonForm(forms.ModelForm):

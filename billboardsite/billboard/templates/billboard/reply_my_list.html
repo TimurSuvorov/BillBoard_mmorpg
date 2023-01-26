@@ -32,7 +32,7 @@
         <ul class="comment-list">
               <li class="comment">
                     <div class="vcard bio">
-                      <img src="{% static 'billboard/images/person_1.jpg' %}" alt="Image placeholder">
+                      <img src="{{ reply.author_repl.userprofile.photoprofile.url }}" alt="Image placeholder">
                     </div>
                 <div class="comment-body">
                   <h5 style="margin-bottom: 0">{{ reply.author_repl.userprofile.nickname }}</h5>
@@ -40,7 +40,9 @@
                       <i class="icon-publish" style='color: black; font-size: 11px; font-family: "Poppins", Arial, sans-serif '>Статус: {{ reply.is_approved|status_translate }}</i>
                   </div>
                   <p>{{ reply.content }}</p>
-                  <p><a href="{% url 'reply_delete' pk=reply.pk %}" class="reply">Удалить</a></p>
+                  {% if request.user == reply.author_repl %}
+                    <p><a href="{% url 'reply_delete' pk=reply.pk %}" class="reply">Удалить</a></p>
+                  {% endif %}
                 </div>
               </li>
             {% empty %}

@@ -1,4 +1,5 @@
 import pytz as pytz
+
 from django.contrib.auth.models import User
 from django.core.validators import MinLengthValidator, RegexValidator
 from django.db import models
@@ -6,6 +7,7 @@ from django.db.models import F
 from django.urls import reverse
 
 from ckeditor_uploader.fields import RichTextUploadingField
+
 
 TIMEZONES = list(zip(pytz.all_timezones, pytz.all_timezones))
 
@@ -178,6 +180,9 @@ class UserProfile(models.Model):
                                 help_text='Никнейм должен быть буквенно-цифровым и начинаться с букву',
                                 verbose_name='Никнейм',
                                 )
+    photoprofile = models.ImageField(upload_to='photoprofile/',
+                                     default='photoprofile/photo_default.jpg',
+                                     )
     aboutme = models.CharField(max_length=1024,
                                blank=True,
                                verbose_name='Описание',
@@ -196,6 +201,7 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f'{self.user.username}Profile'
+
 
     class Meta:
         verbose_name = 'Профиль пользователя'

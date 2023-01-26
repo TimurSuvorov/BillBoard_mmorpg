@@ -13,7 +13,8 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
-from .custom_mixins import OwnerOrAdminAnnounceCheckMixin, CustomDetailView
+from .custom_mixins import OwnerOrAdminAnnounceCheckMixin, CustomDetailView, OwnerUserProfileCheckMixin, \
+    OwnerOrAdminReplyCheckMixin
 from .filters import AnnouncementFilter, ReplyFilter, AnnouncementSearchFilter
 from .forms import AnnouncementForm, ReplyForm, NewsLetterForm, UserProfileForm
 from .models import *
@@ -78,6 +79,7 @@ class AnnouncementDetail(CustomDetailView, FormMixin):
 
 
 class AnnouncementCreate(LoginRequiredMixin, CreateView):
+    permission_required = ('billboard.create_newsletter',)
     model = Announcement
     form_class = AnnouncementForm
     template_name = 'billboard/announcement_create.html'
@@ -93,12 +95,14 @@ class AnnouncementCreate(LoginRequiredMixin, CreateView):
 
 
 class AnnouncementUpdate(LoginRequiredMixin, OwnerOrAdminAnnounceCheckMixin, UpdateView):
+    permission_required = ('billboard.change_newsletter',)
     model = Announcement
     form_class = AnnouncementForm
     template_name = 'billboard/announcement_edit.html'
 
 
 class AnnouncementDelete(LoginRequiredMixin, OwnerOrAdminAnnounceCheckMixin, DeleteView):
+    permission_required = ('billboard.delete_newsletter',)
     model = Announcement
     template_name = 'billboard/announcement_delete.html'
     success_url = reverse_lazy('announcement_list')
@@ -209,7 +213,8 @@ class ReplyMyList(LoginRequiredMixin, ListView):
         return context
 
 
-class ReplyDelete(LoginRequiredMixin, DeleteView):
+class ReplyDelete(LoginRequiredMixin, OwnerOrAdminReplyCheckMixin, DeleteView):
+    permission_required = ('billboard.delete_reply', )
     model = Reply
     template_name = 'billboard/reply_delete.html'
 
@@ -274,7 +279,7 @@ class NewsLetterDetail(CustomDetailView):
 
 
 class NewsLetterCreate(PermissionRequiredMixin, CreateView):
-    permission_required = 'billboard.add_newsletter'
+    permission_required = ('billboard.add_newsletter',)
     permission_denied_message = 'only_newsauthors'
     model = Newsletter
     form_class = NewsLetterForm
@@ -291,7 +296,7 @@ class NewsLetterCreate(PermissionRequiredMixin, CreateView):
 
 
 class NewsLetterUpdate(PermissionRequiredMixin, UpdateView):
-    permission_required = 'billboard.edit_newsletter'
+    permission_required = ('billboard.edit_newsletter',)
     permission_denied_message = 'only_newsauthors'
     model = Newsletter
     raise_exception = True
@@ -300,7 +305,7 @@ class NewsLetterUpdate(PermissionRequiredMixin, UpdateView):
 
 
 class NewsLetterDelete(PermissionRequiredMixin, DeleteView):
-    permission_required = 'billboard.delete_newsletter'
+    permission_required = ('billboard.delete_newsletter',)
     permission_denied_message = 'only_newsauthors'
     model = Newsletter
     template_name = 'billboard/newsletter_delete.html'
@@ -338,7 +343,8 @@ def declain_to_newsauthors(request, user_id):
 
 
 # UserProfile related Views
-class UserProfileUpdate(LoginRequiredMixin, UpdateView):
+class UserProfileUpdate(LoginRequiredMixin, OwnerUserProfileCheckMixin, UpdateView):
+    permission_required = ('billboard.change_userprofile', 'billboard.view_userprofile',)
     model = UserProfile
     form_class = UserProfileForm
     template_name = 'billboard/userprofile_edit.html'

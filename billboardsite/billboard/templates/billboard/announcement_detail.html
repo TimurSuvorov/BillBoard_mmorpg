@@ -44,10 +44,10 @@
             {% for reply in replies %}
               <li class="comment">
                     <div class="vcard bio">
-                      <img src="{% static 'billboard/images/person_1.jpg' %}" alt="Image placeholder">
+                      <img src="{{ reply.author_repl.userprofile.photoprofile.url }}" alt="Image placeholder">
 
                     </div>
-                <div class="comment-body">
+                <div class="comment-body" >
                   <h5 style="margin-bottom: 0">{{ reply.author_repl.userprofile.nickname }}</h5>
                   <div class="meta">{{ reply.time_update|date:'d.m.y H:i' }}
                       <i class="icon-publish" style='color: black; font-size: 11px; font-family: "Poppins", Arial, sans-serif '>Статус: {{ reply.is_approved|status_translate }}</i>

@@ -1,3 +1,8 @@
+import time
+
+from io import BytesIO
+from PIL import Image
+from django.core.files import File
 from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
 
@@ -25,3 +30,22 @@ def sendsimplemail(subject, message, recipient_list, consolemessage=None):
     )
     if consolemessage:
         print(f'Mail send: {consolemessage}')
+
+
+def check_resize_image(file, user, base_size: tuple = (150, 150)):
+    with Image.open(file) as img:
+        img_w, img_h = img.size
+        # Обрезка-квадрат по минимальной стороне
+        img_new = img.crop(((img_w - min(img.size)) // 2,
+                            (img_h - min(img.size)) // 2,
+                            (img_w + min(img.size)) // 2,
+                            (img_h + min(img.size)) // 2))
+        # Создание миниатюры
+        img_new.thumbnail(base_size)
+        img_new = img_new.convert('RGB')  # В случае RGBA изображения
+        thumb_io = BytesIO()  # Создание BytesIO объекта
+        img_new.save(thumb_io, format='JPEG', quality=95)  # Сохранение изображения в BytesIO объект
+        new_name = f'photo_{user}_{time.time_ns()}.jpeg'
+        new_image = File(thumb_io, name=new_name)  # Создание File объекта, который будет воспринимать поле ImageField модели
+        return new_image
+
