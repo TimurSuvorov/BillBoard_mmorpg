@@ -1,17 +1,14 @@
-from allauth.account.views import ConfirmEmailView
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.models import Group
 from django.core.exceptions import PermissionDenied
-from django.db import connection
 from django.http import HttpResponseRedirect, HttpRequest
 from django.urls import reverse_lazy
 from django.views.generic.edit import FormMixin
-from pprint import pprint
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, render
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
 from .custom_mixins import OwnerOrAdminAnnounceCheckMixin, CustomDetailView, OwnerUserProfileCheckMixin, \
     OwnerOrAdminReplyCheckMixin
@@ -27,7 +24,7 @@ class AnnouncementList(ListView):
     model = Announcement
     context_object_name = 'all_announcement'
     template_name = 'billboard/announcement_list.html'
-    paginate_by = 6
+    paginate_by = 5
 
     def get_queryset(self):
         self.queryset = Announcement.objects.filter(is_published=True).order_by('-time_update')
@@ -112,7 +109,7 @@ class AnnouncementSearch(ListView):
     model = Announcement
     context_object_name = 'all_announcement'
     template_name = 'billboard/announcement_search.html'
-    paginate_by = 6
+    paginate_by = 5
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -163,7 +160,7 @@ class AnnWithReplyForMeList(LoginRequiredMixin, ListView):
     model = Announcement
     context_object_name = 'anns_with_reply_forme'
     template_name = 'billboard/reply_forme_list.html'
-    paginate_by = 6
+    paginate_by = 5
 
     def get_queryset(self):
         # Берем МОИ объявления, где есть отлики
@@ -191,7 +188,7 @@ class ReplyMyList(LoginRequiredMixin, ListView):
     model = Announcement
     context_object_name = 'anns_with_reply_my'
     template_name = 'billboard/reply_my_list.html'
-    paginate_by = 6
+    paginate_by = 5
 
     def get_queryset(self):
         # Берем ВСЕ объявления и где есть МОИ отлики
@@ -237,6 +234,7 @@ class CategoryListView(ListView):
     ordering = ['-time_update']
     template_name = 'billboard/announcement_by_category.html'
     context_object_name = 'category_announcement'
+    paginate_by = 5
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -255,7 +253,7 @@ class NewsLetterList(ListView):
     model = Newsletter
     context_object_name = 'all_newsletter'
     template_name = 'billboard/newsletter_list.html'
-    paginate_by = 3
+    paginate_by = 5
 
     def get_queryset(self):
         queryset = super().get_queryset()

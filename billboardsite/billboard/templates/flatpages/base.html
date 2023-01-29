@@ -147,9 +147,36 @@
                             <!-- BLOG END -->
 
 			    		</div><!-- END-->
+
                             <!-- PAGINATOR START -->
-                                {% block paginator %}
-                                {% endblock paginator %}
+
+                        {% if page_obj.has_other_pages %}
+                            <div class="row">
+                                <div class="col">
+                                    <div class="block-27">
+                                        <ul>
+                                    {# Предыдущая страница #}
+                                        {% if page_obj.has_previous %}
+                                            <li><a href="?{% urlreplacer page=page_obj.previous_page_number %}">&lt;</a></li>
+                                        {% endif %}
+                                        {% for page_t in page_obj.paginator.page_range %}
+                                            {# Текущая страница #}
+                                            {% if page_obj.number == page_t %}
+                                                    <li class="active"><span>{{ page_obj.number }}</span></li>
+                                            {# +/- 2 страницы от текущей #}
+                                            {% elif page_t >= page_obj.number|add:-2 and page_t <= page_obj.number|add:2 %}
+                                                    <li><a href="?{% urlreplacer page=page_t %}">{{ page_t }}</a></li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {# Следующая страница #}
+                                        {% if page_obj.has_next %}
+                                            <li><a href="?{% urlreplacer page=page_obj.next_page_number %}">&gt</a></li>
+                                        {% endif %}
+                                          </ul>
+                                    </div>
+                                  </div>
+                                </div>
+                        {% endif %}
                             <!-- PAGINATOR END -->
                     </div>
                 <div class="col-xl-4 sidebar ftco-animate bg-light pt-5">
