@@ -3,7 +3,7 @@
 В проекте используется БД PostgreSQL. Ниже приведены инструкции для установки и настройки БД, апробированные на Ubuntu 20.04 LTS.
 
 **1. Установка и запуск PostgreSQL**
-##### Обновляем список пакетов и устанавливаем PostgreSQL вместе с пакетом -contrib:
+##### Обновляем список пакетов OS и устанавливаем PostgreSQL вместе с пакетом -contrib:
      sudo apt update
      sudo apt install postgresql postgresql-contrib
 ##### Запуск сервер PostgreSQL и проверка статуса:
