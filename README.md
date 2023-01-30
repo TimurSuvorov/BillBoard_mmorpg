@@ -39,10 +39,10 @@ pip install -r billboardsite/requirements.txt
 sudo apt-get update
 sudo apt-get install redis
 ```
- 4. Произведите установку и настройку PostgreSQL [по инструкции](http://1)
+ 4. Произведите установку и настройку PostgreSQL [по инструкции](https://github.com/TimurSuvorov/BillBoard_mmorpg/blob/master/README_PostgreSQL.md)
  5. Теперь запустите всё необходимое в отдельных консольных окнах:
 	 - сервер Redis: ```redis-server```
-	 - сервер PostgreSQL (уже должен работать): ```sudo service postgresql start```
+	 - сервер PostgreSQL <sub>(уже должен работать)</sub>: ```sudo service postgresql start```
 	 - [!] Запуск воркера Celery из каталога проекта *billboardsite/*: ```celery -A billboardsite worker -l INFO```
 	 - [!] Запуск Django-проекта из каталога проекта *billboardsite/*: ```python manage.py runserver```
    
