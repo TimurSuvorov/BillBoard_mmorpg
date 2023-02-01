@@ -32,7 +32,7 @@ def sendsimplemail(subject, message, recipient_list, consolemessage=None):
         print(f'Mail send: {consolemessage}')
 
 
-def check_resize_image(file, user, base_size: tuple = (150, 150)):
+def check_resize_image(file, suffix_name, base_size: tuple = (150, 150)):
     with Image.open(file) as img:
         img_w, img_h = img.size
         # Обрезка-квадрат по минимальной стороне
@@ -45,7 +45,7 @@ def check_resize_image(file, user, base_size: tuple = (150, 150)):
         img_new = img_new.convert('RGB')  # В случае RGBA изображения
         thumb_io = BytesIO()  # Создание BytesIO объекта
         img_new.save(thumb_io, format='JPEG', quality=95)  # Сохранение изображения в BytesIO объект
-        new_name = f'photo_{user}_{time.time_ns()}.jpeg'
+        new_name = f'photo_{suffix_name}_{time.time_ns()}.jpeg'
         new_image = File(thumb_io, name=new_name)  # Создание File объекта, который будет воспринимать поле ImageField модели
         return new_image
 

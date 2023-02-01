@@ -32,7 +32,7 @@
         <ul class="comment-list">
               <li class="comment">
                     <div class="vcard bio">
-                      <img src="{% static 'billboard/images/person_1.jpg' %}" alt="Image placeholder">
+                      <img src="{{ reply.author_repl.userprofile.photoimage.url }}" alt="Image placeholder">
                     </div>
                 <div class="comment-body">
                   <h5 style="margin-bottom: 0">{{ reply.author_repl.userprofile.nickname }}</h5>

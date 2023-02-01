@@ -1588,6 +1588,11 @@ pre {
   .table-responsive > .table-bordered {
     border: 0; }
 
+.form-error {
+  font-size: 12px;
+  color: red;
+}
+
 .form-control {
   display: block;
   width: 100%;

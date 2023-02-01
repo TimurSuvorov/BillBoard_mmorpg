@@ -53,21 +53,21 @@
 
 
 <div class="container mt-5">
-        <label for="id_photoprofile">Ваш текущий аватар:</label>
+        <label for="id_photoimage">Ваш текущий аватар:</label>
         <div class="media">
-            <img id="id_photoprofile" class="rounded-circle profile-image" src="{{ object.photoprofile.url }}" alt="Avatar_photo">
+            <img id="id_photoimage" class="rounded-circle profile-image" src="{{ object.photoimage.url }}" alt="Avatar_photo">
         </div>
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.media}}
                 <div class="form-error">{{ form.non_field_errors }}</div>
                 <div class="form-group">
-                    <input alt=""
-                        type="file"
-                        name="photoprofile"
-                        accept=".jpg, .jpeg, .png"/>
-                    <div class="form-error">{{ form.photoprofile.errors }}</div>
-                    <small class="form-text text-muted">{{ form.photoprofile.help_text }}</small>
+                    <input type="file" name="photoimage" accept=".jpg, .jpeg, .png"/>
+                    {% if form.photoimage.errors %}
+                    <div class="form-error">{{ form.photoimage.errors }}</div>
+                    {% else %}
+                    <small class="form-text text-muted">{{ form.photoimage.help_text }}</small>
+                    {% endif %}
                 </div>
                 <div class="form-group">
                     {{ form.nickname|as_crispy_field }}
@@ -93,15 +93,6 @@
                     {{ form.is_news_subscribe|as_crispy_field }}
                     <div class="form-error">{{ form.is_news_subscribe.errors }}</div>
                 </div>
-
-
-{#            <div class="form-row">#}
-{#                <div class="media">#}
-{#                <img class="" src="{{ object.photoprofile.url }}">#}
-{#                {{ form.photoprofile|as_crispy_field }}#}
-{#                <div class="form-error">{{ field.errors }}</div>#}
-{#                </div>#}
-{#            </div>#}
 
             <div>
                 {% if messages %}

@@ -247,6 +247,8 @@ ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 ACCOUNT_EMAIL_CONFIRMATION_HMAC = False
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+
 
 # Additional authorization setting
 ACCOUNT_EMAIL_SUBJECT_PREFIX = '[MMORPG Billboard]'
@@ -266,7 +268,7 @@ EMAIL_HOST_USER = os.getenv('yandex_EMAIL_HOST_USER')  # имя пользова
 EMAIL_HOST_PASSWORD = os.getenv("yandex_EMAIL_HOST_PASSWORD")  # пароль от почты
 EMAIL_USE_SSL = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER + '@yandex.ru'
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Celery settings
 CELERY_BROKER_URL = 'redis://localhost:6379'
@@ -274,3 +276,7 @@ CELERY_RESULT_BACKEND = 'redis://localhost:6379'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+
+
+IMAGE_ALLOWED_FORMATS = ['image/jpeg', 'image/jpg', 'image/png', 'image/mpo']
+IMAGE_MIN_SIZE = (150, 150)

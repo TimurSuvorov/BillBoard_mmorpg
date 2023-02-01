@@ -20,6 +20,10 @@ class Announcement(models.Model):
                              verbose_name='Заголовок')
     content = RichTextUploadingField(validators=[MinLengthValidator(4)],
                                      verbose_name='Содержание')
+    photoimage = models.ImageField(upload_to='photoannouncement/',
+                                   default='photoannouncement/photoannouncement_default.jpg',
+                                   verbose_name='Миниатюра объявления',
+                                   )
     is_published = models.BooleanField(default=True,
                                        verbose_name='Публикация')
     time_create = models.DateTimeField(auto_now_add=True,
@@ -131,6 +135,9 @@ class Newsletter(models.Model):
                              verbose_name='Заголовок')
     content = models.TextField(validators=[MinLengthValidator(4)],
                                verbose_name='Содержание(текст)')
+    photoimage = models.ImageField(upload_to='photonewsletter/',
+                                   default='photonewsletter/photonewsletter_default.jpg',
+                                   )
     category = models.ForeignKey(to='Category',
                                  on_delete=models.CASCADE,
                                  related_name='cat_newsletters',
@@ -180,9 +187,9 @@ class UserProfile(models.Model):
                                 help_text='Никнейм должен быть буквенно-цифровым и начинаться с букву',
                                 verbose_name='Никнейм',
                                 )
-    photoprofile = models.ImageField(upload_to='photoprofile/',
-                                     default='photoprofile/photo_default.jpg',
-                                     )
+    photoimage = models.ImageField(upload_to='photoprofile/',
+                                   default='photoprofile/photoprofile_default.jpg',
+                                   )
     aboutme = models.CharField(max_length=1024,
                                blank=True,
                                verbose_name='Описание',
@@ -201,7 +208,6 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f'{self.user.username}Profile'
-
 
     class Meta:
         verbose_name = 'Профиль пользователя'

@@ -4,9 +4,19 @@
     <p>Вам был отправлено письмо на e-mail с кодом для активации аккаунта. Введите его в форме</p>
     <form method="post" action="{% url 'confirmationproccessing' %}">
     {% csrf_token %}
-        <p>Код: <input name="key" type="text" maxlength="6" value="" placeholder="Введите код"/></p>
+        <label for="id_key" >Код: </label>
+        <p><input name="key"
+                  id="id_key"
+                  type="text"
+                  minlength="6"
+                  maxlength="6"
+                  pattern="[0-9]+"
+                  title="Введите 6 цифр для проверки"
+                  value=""
+                  placeholder="Введите код" required/></p>
         <button type="submit" value="Введите код" class="btn-secondary">Отправить</button>
     </form>
 
+    {{ form }}
 
 {% endblock %}
