@@ -12,23 +12,58 @@
 {% endblock category %}
 
 {% block announcement %}
+<style>
+.miniature-image {
+    width: 130px;
+    height: 130px;
+    margin-bottom: 10px;
+}
+</style>
+
+
     <div class="col-md-12">
         <h1 class="mb-2">Редактирование новости для рассылки</h1>
     </div>
 
 
 <div class="container mt-5">
+
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.media}}
             <div class="form-error">{{ form.non_field_errors }}</div>
-            {% for field in form %}
             <div class="form-group">
-                <div><label for="{{ field.id_for_label }}" class="text-dark">{{ field.label }}: </label></div>
-                {{ field }}
-                <div class="form-error">{{ field.errors }}</div>
+                <div><label for="{{ form.title.id_for_label }}" class="text-dark">{{ form.title.label }}</label></div>
+                {{ form.title }}
+                <div class="form-error">{{ form.title.errors }}</div>
             </div>
-            {% endfor %}
+            <label for="id_photoimage">Текущая миниатюра объявления:</label>
+            <div class="media">
+                <img id="id_photoimage" class="rounded-circle miniature-image" src="{{ object.photoimage.url }}" alt="Miniature_photo">
+            </div>
+            <div class="form-group">
+                <input type="file" name="photoimage" accept=".jpg, .jpeg, .png"/>
+                {% if form.photoimage.errors %}
+                <div class="form-error">{{ form.photoimage.errors }}</div>
+                {% else %}
+                <small class="form-text text-muted">{{ form.photoimage.help_text }}</small>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <div><label for="{{ form.content.id_for_label }}" class="text-dark">{{ form.content.label }}</label></div>
+                {{ form.content }}
+                <div class="form-error">{{ form.content.errors }}</div>
+            </div>
+            <div class="form-group">
+                <div><label for="{{ form.is_published.id_for_label }}" class="text-dark">{{ form.is_published.label }}</label></div>
+                {{ form.is_published }}
+                <div class="form-error">{{ form.is_published.errors }}</div>
+            </div>
+            <div class="form-group">
+                <div><label for="{{ form.category.id_for_label }}" class="text-dark">{{ form.category.label }}</label></div>
+                {{ form.category }}
+                <div class="form-error">{{ form.category.errors }}</div>
+            </div>
             <div class="row justify-content-center">
                 <input type="submit" class="btn btn-success" style="margin-bottom: 10px" value="Изменить" />
                 <a href="{% url 'newsletter_list' %}" class="btn btn-outline-secondary">Отмена</a>

@@ -38,7 +38,7 @@
     font-size: 13px;
 }
 
-.profile-image {
+.miniature-image {
     width: 130px;
     height: 130px;
     margin-bottom: 10px;
@@ -55,7 +55,7 @@
 <div class="container mt-5">
         <label for="id_photoimage">Ваш текущий аватар:</label>
         <div class="media">
-            <img id="id_photoimage" class="rounded-circle profile-image" src="{{ object.photoimage.url }}" alt="Avatar_photo">
+            <img id="id_photoimage" class="rounded-circle miniature-image" src="{{ object.photoimage.url }}" alt="Avatar_photo">
         </div>
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}

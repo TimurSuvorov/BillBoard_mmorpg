@@ -2,3 +2,4 @@ venv_billboard
 **/__pycache__/
 .env
 draft.py
+/billboardsite/dump.rdb
