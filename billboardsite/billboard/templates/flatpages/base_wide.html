@@ -107,7 +107,7 @@
                     <li {% if userprofile_edit_selected %}
                             class="colorlib-active"><a href="{% url 'userprofile_edit' request.user.username|usernametoid %}">
                         {% else %}
-                            ><a href="{% url 'userprofile_edit' request.user.username|usernametoid %}">
+                            ><a href="{% url 'userprofile_edit' request.user.id %}">
                         {% endif %}Мои профиль</a>
                     </li>
 

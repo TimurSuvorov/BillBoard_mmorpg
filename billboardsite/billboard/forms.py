@@ -75,4 +75,9 @@ class UserProfileForm(forms.ModelForm):
                 return upl_photo_
             raise ValidationError(message='Ошибка загрузки: Неверный формат изображения или маленькое разрешение')
 
+    # def clean_timezone(self):
+    #     timezone = self.cleaned_data['timezone']
+    #     self.request.session["django_timezone"] = request.POST["timezone"]
+    #     print(timezone)
+    #     return timezone
 

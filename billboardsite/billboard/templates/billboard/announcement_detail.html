@@ -18,9 +18,9 @@
         <div class="meta-wrap">
             <p class="meta">
                 <span style="font-size: 11px; margin-right: 5px"><i class="icon-face mr-1"></i>Автор: {{ announcement_detail.author_ann.userprofile.nickname }}</span>
-                <span style="font-size: 11px; margin-right: 5px"><i class="icon-calendar mr-1"></i>{% if isupdated %}Обновлено{% else %}Создано{% endif %}: {{ announcement_detail.time_create|date:'d.m.y H:i' }}</span>
+                <span style="font-size: 11px; margin-right: 5px"><i class="icon-calendar mr-1"></i>Обновлено: {{ announcement_detail.time_create|date:'d.m.y H:i' }}</span>
                 <span style="font-size: 11px; margin-right: 5px"><a href="#"><i class="icon-folder-o mr-1"></i>{{ announcement_detail.category }}</a></span>
-                <span style="font-size: 11px; margin-right: 5px"><i class="icon-comment2 mr-1" title="Отлики"></i>{{ announcement_detail.replies.all.count }}</span>
+                <span style="font-size: 11px; margin-right: 5px"><i class="icon-comment2 mr-1" title="Отлики"></i>{{ announcement_detail.num_replies }}</span>
                 <span style="font-size: 11px; margin-right: 5px"><i class="icon-eye" title="Просмотры"></i>&nbsp;{{ announcement_detail.pageviews }}</span>
                 {% if request.user == announcement_detail.author_ann or request.user.is_superuser %}
             <p>

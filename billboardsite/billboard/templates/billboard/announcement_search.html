@@ -75,18 +75,17 @@
 
 
     {% for announcement in all_announcement %}
-        {% isupdated announcement.pk as isupdated %}
 			    			<div class="col-md-12">
 									<div class="blog-entry ftco-animate d-md-flex">
-										<a href="{% url 'announcement_detail' pk=announcement.pk %}" class="img img-2" style="background-image: url({% static 'billboard/images/image_2.jpg' %});"></a>
+										<a href="{% url 'announcement_detail' pk=announcement.pk %}" class="img img-2" style="background-image: url({{ announcement.photoimage.url }});"></a>
 										<div class="text text-2 pl-md-4">
 				              <h3 class="mb-2"><a href="{% url 'announcement_detail' pk=announcement.pk %}">{{ announcement.title }}</a></h3>
                             <div class="meta-wrap">
                                   <p class="meta">
-                                    <span><i class="icon-face mr-1"></i>Автор: {{ announcement.author_ann.userprofile.nickname }}</span>
-                                    <span><i class="icon-calendar mr-1"></i>{% if isupdated %}Обновлено: {{ announcement.time_update|date:'d.m.y H:i' }}{% else %}Создано: {{ announcement.time_create|date:'d.m.y H:i' }}{% endif %}</span>
+                                    <span><i class="icon-face mr-1"></i>Автор: {{ announcement.ann_nickname }}</span>
+                                    <span><i class="icon-calendar mr-1"></i>Обновлено: {{ announcement.time_update|date:'d.m.y H:i' }}</span>
                                     <span><a href="{% url 'announcement_by_category' pk=announcement.category.pk  %}"><i class="icon-folder-o mr-1"></i>{{ announcement.category }}</a></span>
-				              		<span><i class="icon-comment2 mr-1" title="Отлики"></i>{{ announcement.replies.all.count }}</span>
+				              		<span><i class="icon-comment2 mr-1" title="Отлики"></i>{{ announcement.num_replies }}</span>
 				              	    <span><i class="icon-eye" title="Просмотры"></i>&nbsp;{{ announcement.pageviews }}</span>
                                   </p>
 			              	</div>

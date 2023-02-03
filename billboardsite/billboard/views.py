@@ -1,3 +1,4 @@
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
@@ -24,12 +25,17 @@ class AnnouncementList(ListView):
     model = Announcement
     context_object_name = 'all_announcement'
     template_name = 'billboard/announcement_list.html'
-    paginate_by = 5
+    paginate_by = 15
 
     def get_queryset(self):
-        self.queryset = Announcement.objects.filter(is_published=True).order_by('-time_update')
+        queryset_ann = Announcement.objects\
+            .filter(is_published=True)\
+            .select_related('category')\
+            .select_related('author_ann')\
+            .order_by('-time_update')\
+            .annotate(ann_nickname=F('author_ann__userprofile__nickname'))
         self.filtered_queryset = AnnouncementFilter(data=self.request.GET,
-                                                    queryset=self.queryset,
+                                                    queryset=queryset_ann,
                                                     request=self.request)
         return self.filtered_queryset.qs
 
@@ -76,7 +82,7 @@ class AnnouncementDetail(CustomDetailView, FormMixin):
 
 
 class AnnouncementCreate(LoginRequiredMixin, CreateView):
-    permission_required = ('billboard.create_newsletter',)
+    permission_required = ('billboard.create_announcement',)
     model = Announcement
     form_class = AnnouncementForm
     template_name = 'billboard/announcement_create.html'
@@ -92,14 +98,14 @@ class AnnouncementCreate(LoginRequiredMixin, CreateView):
 
 
 class AnnouncementUpdate(LoginRequiredMixin, OwnerOrAdminAnnounceCheckMixin, UpdateView):
-    permission_required = ('billboard.change_newsletter',)
+    permission_required = ('billboard.change_announcement',)
     model = Announcement
     form_class = AnnouncementForm
     template_name = 'billboard/announcement_edit.html'
 
 
 class AnnouncementDelete(LoginRequiredMixin, OwnerOrAdminAnnounceCheckMixin, DeleteView):
-    permission_required = ('billboard.delete_newsletter',)
+    permission_required = ('billboard.delete_announcement',)
     model = Announcement
     template_name = 'billboard/announcement_delete.html'
     success_url = reverse_lazy('announcement_list')
@@ -112,8 +118,12 @@ class AnnouncementSearch(ListView):
     paginate_by = 5
 
     def get_queryset(self):
-        queryset = super().get_queryset()
-        queryset_ann = queryset.filter(is_published=True).order_by('-time_update')   # Берем только опубликованные
+        queryset_ann = Announcement.objects \
+            .filter(is_published=True) \
+            .select_related('category') \
+            .select_related('author_ann') \
+            .order_by('-time_update') \
+            .annotate(ann_nickname=F('author_ann__userprofile__nickname'))
         author_nickname_choices = \
             queryset_ann.values_list('author_ann', 'author_ann__userprofile__nickname').order_by().distinct()
         self.filtered_queryset = AnnouncementSearchFilter(data=self.request.GET,
@@ -174,7 +184,7 @@ class AnnWithReplyForMeList(LoginRequiredMixin, ListView):
         # Применяем фильтр
         self.filtered_queryset = ReplyFilter(data=self.request.GET,
                                              queryset=self.queryset_ann,
-                                             queryset_cat=self.queryset_cat,)
+                                             queryset_cat=self.queryset_cat, )
         return self.filtered_queryset.qs
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -192,7 +202,8 @@ class ReplyMyList(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         # Берем ВСЕ объявления и где есть МОИ отлики
-        self.ann_with_reply_my = Reply.objects.filter(author_repl=self.request.user).values_list('announcement', flat=True)
+        self.ann_with_reply_my = Reply.objects.filter(author_repl=self.request.user).values_list('announcement',
+                                                                                                 flat=True)
         self.queryset_ann = Announcement.objects.filter(Q(is_published__gt=0) &
                                                         Q(pk__in=self.ann_with_reply_my)
                                                         ).order_by('-time_update')
@@ -211,7 +222,7 @@ class ReplyMyList(LoginRequiredMixin, ListView):
 
 
 class ReplyDelete(LoginRequiredMixin, OwnerOrAdminReplyCheckMixin, DeleteView):
-    permission_required = ('billboard.delete_reply', )
+    permission_required = ('billboard.delete_reply',)
     model = Reply
     template_name = 'billboard/reply_delete.html'
 
@@ -237,9 +248,14 @@ class CategoryListView(ListView):
     paginate_by = 5
 
     def get_queryset(self):
-        queryset = super().get_queryset()
         self.category = get_object_or_404(Category, pk=self.kwargs['pk'])
-        return queryset.filter(Q(category=self.category) & Q(is_published__gt=0)).order_by('-time_update').order_by('-time_create')
+        queryset_ann = Announcement.objects \
+            .filter(Q(category=self.category) & Q(is_published__gt=0)) \
+            .select_related('category') \
+            .select_related('author_ann') \
+            .order_by('-time_update').order_by('-time_create') \
+            .annotate(ann_nickname=F('author_ann__userprofile__nickname'))
+        return queryset_ann
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
@@ -312,13 +328,15 @@ class NewsLetterDelete(PermissionRequiredMixin, DeleteView):
 
 @login_required
 def request_to_newsauthors(request):
-    user_newsauthors = Group.objects.filter(Q(name='managers') | Q(name='newsauthors')).values_list('user__username', flat=True)
+    user_newsauthors = Group.objects.filter(Q(name='managers') | Q(name='newsauthors')).values_list('user__username',
+                                                                                                    flat=True)
     if request.user in user_newsauthors:
         raise PermissionDenied('already_in_newsauthors')
     request_to_newsauthors_mail_async.delay(request.user.id)
     return render(request,
                   'billboard/infopage.html',
-                  context={'information': 'Запрос на предоставление доступа к редактированию и созданию новостей отправлен.'}
+                  context={
+                      'information': 'Запрос на предоставление доступа к редактированию и созданию новостей отправлен.'}
                   )
 
 
@@ -356,10 +374,12 @@ class UserProfileUpdate(LoginRequiredMixin, OwnerUserProfileCheckMixin, UpdateVi
         messages.success(self.request, 'Настройки профиля применены успешно!')
         return reverse_lazy('userprofile_edit', kwargs={'pk': self.kwargs['pk']})
 
+    def post(self, request, *args, **kwargs):
+        request.session["django_timezone"] = request.POST["timezone"]
+        return super().post(request, *args, **kwargs)
 
 # Additional Views
 def confirmationproccessing(request):
     if request.method == 'POST':
         key = request.POST.get('key')
         return HttpResponseRedirect(reverse_lazy('account_confirm_email', kwargs={'key': key}))
-

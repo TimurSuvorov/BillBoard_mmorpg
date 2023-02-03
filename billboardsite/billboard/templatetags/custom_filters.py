@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 
 register = template.Library()
 
+
 @register.filter()
 def status_translate(status_value):
     status_dict = {'approved': 'Принят',

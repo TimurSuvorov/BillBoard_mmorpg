@@ -1,18 +1,11 @@
 import datetime
 
 from django import template
+from django.db.models import Count
+
 from billboard.models import Announcement, Category, Newsletter
 
 register = template.Library()
-
-
-@register.simple_tag()
-def isupdated(pk):
-    announcement = Announcement.objects.get(pk=pk)
-    delta: datetime.timedelta = announcement.time_update - announcement.time_create
-    if delta.seconds >= 60:
-        return True
-    return False
 
 
 @register.simple_tag(takes_context=True)
@@ -26,7 +19,7 @@ def urlreplacer(context, **kwargs):
 @register.inclusion_tag('billboard/tags_categories_block.html', takes_context=True, name='tag_categories_block')
 def tag_categories_block(context):
     category_selected = context.get('category_selected', 0)
-    categories = Category.objects.all()
+    categories = Category.objects.annotate(cat_num=Count('cat_announcements'))
     return {'categories': categories,
             'category_selected': category_selected}
 
