@@ -21,6 +21,7 @@ class Announcement(models.Model):
     content = RichTextUploadingField(validators=[MinLengthValidator(4)],
                                      verbose_name='Содержание')
     photoimage = models.ImageField(upload_to='photoannouncement/',
+                                   blank=True,
                                    default='photoannouncement/photoannouncement_default.jpg',
                                    verbose_name='Миниатюра объявления',
                                    )

@@ -28,6 +28,7 @@ class CommonForm(forms.ModelForm):
                                             'Минимальное разрешение: {min_size}.'.format(allowed_formats=allowed_formats_, min_size=min_size_),
                                   error_messages={'invalid_image': 'Загрузите изображение повторно. '
                                                   'Загруженный вами файл либо не был изображением, либо был поврежден.'},
+                                  required=False,
                                   )
     is_published = forms.BooleanField(required=False,
                                       initial=True,
@@ -40,7 +41,8 @@ class CommonForm(forms.ModelForm):
 
     def clean_photoimage(self):
         upl_photo = self.cleaned_data['photoimage']
-        if not isinstance(upl_photo, ImageFieldFile):  # Если поле в POST пустое, то тип ImageFieldFile
+        # Если поле в POST пустое, то при создании None, при редактировании - ImageFieldFile
+        if upl_photo and not isinstance(upl_photo, ImageFieldFile):
             if upl_photo.content_type in IMAGE_ALLOWED_FORMATS and \
                     (upl_photo.image.size[0] >= 150 and upl_photo.image.size[1] >= 150):
                 upl_photo_ = check_resize_image(upl_photo,
