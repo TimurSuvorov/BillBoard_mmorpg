@@ -42,7 +42,7 @@
 		    }  
         }
    
-##### Измените имя файла .env.example на .env. Замените шаблонные значения POSTGRES_USER  и POSTGRES_PASSWORD для загрузки их в среду окружения переменных при запуске:
+##### Измените имя файла "*.env.example*" на "*.env.*" в billboardsite/. Замените шаблонные значения POSTGRES_USER  и POSTGRES_PASSWORD для загрузки их в среду окружения переменных при запуске:
     # .env
 	    POSTGRES_USER = 'postgres_user'  
 	    POSTGRES_PASSWORD = 'postgres_password'

@@ -266,6 +266,7 @@ ADMINS = [('Timur_admin', 'suvorovt@gmail.com'),
 
 MANAGERS = []
 
+
 LOGIN_REDIRECT_URL = '/billboard/announcements/'
 LOGOUT_REDIRECT_URL = '/billboard/announcements/'
 
@@ -276,7 +277,9 @@ EMAIL_HOST_USER = os.getenv('yandex_EMAIL_HOST_USER')  # имя пользова
 EMAIL_HOST_PASSWORD = os.getenv("yandex_EMAIL_HOST_PASSWORD")  # пароль от почты
 EMAIL_USE_SSL = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER + '@yandex.ru'
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
 
 # Celery settings
 CELERY_BROKER_URL = 'redis://localhost:6379'

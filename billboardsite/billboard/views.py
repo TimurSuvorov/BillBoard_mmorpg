@@ -1,3 +1,4 @@
+import datetime
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -310,7 +311,7 @@ class NewsLetterCreate(PermissionRequiredMixin, CreateView):
 
 
 class NewsLetterUpdate(PermissionRequiredMixin, UpdateView):
-    permission_required = ('billboard.edit_newsletter',)
+    permission_required = ('billboard.change_newsletter',)
     permission_denied_message = 'only_newsauthors'
     model = Newsletter
     raise_exception = True
