@@ -1,21 +1,83 @@
-{% extends "account/base.html" %}
+{% load static %}
+{% load account socialaccount %}
 
-{% load i18n %}
 
-{% block head_title %}{% trans "Signup" %}{% endblock %}
+<!doctype html>
+<html lang="en">
+  <head>
+  	<title>Регистрация</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-{% block content %}
-<h1>{% trans "Sign Up" %}</h1>
+	<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
 
-<p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="{% static 'account/css/style.css' %}">
 
-<form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
-  {% csrf_token %}
-  {{ form.as_p }}
-  {% if redirect_field_value %}
-  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-  {% endif %}
-  <button type="submit">{% trans "Sign Up" %} &raquo;</button>
-</form>
+	</head>
+	<body>
+	<section class="ftco-section">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-md-6 text-center mb-5">
+					<h2 class="heading-section">Добро пожаловать!!!</h2>
+				</div>
+			</div>
+			<div class="row justify-content-center">
+				<div class="col-md-7 col-lg-5">
+					<div class="wrap">
+						<div class="img" style="background-image: url({% static 'account/images/bg-1.jpg'%});"></div>
+						<div class="login-wrap p-4 p-md-5">
+                            <div class="d-flex">
+                                <div class="w-100">
+                                    <h3 class="mb-4">Регистрация</h3>
+                                </div>
+                            </div>
 
-{% endblock %}
+                    <form class="signup" method="POST" action="{% url 'account_signup' %}">
+                    <div class="form-error">{{ form.non_field_errors }}</div>
+                    {% csrf_token %}
+                    <div class="form-group mt-3">
+                        <input id="id_email" type="email" name="email" class="form-control" required>
+                        <label class="form-control-placeholder" for="id_email">E-mail</label>
+                    </div>
+		            <div class="form-group">
+		              <input id="password-field1" type="password" name="password1" class="form-control" required>
+		              <label class="form-control-placeholder" for="password-field1">Введите пароль</label>
+		              <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+		            </div>
+		            <div class="form-group">
+		              <input id="password-field2" type="password" name="password2" class="form-control" required>
+		              <label class="form-control-placeholder" for="password-field2">Повторите ввод</label>
+		              <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+		            </div>
+		            <div class="form-group">
+		            	<button type="submit" class="form-control btn btn-primary rounded submit px-3">Зарегистрироваться</button>
+		            </div>
+                  {% if redirect_field_value %}
+                  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                  {% endif %}
+		          </form>
+                  <p class="or">
+                  <span>или</span>
+                  </p>
+                    <p class="social-media d-flex  justify-content-center">
+                        <a href="{% provider_login_url "yandex" %}" class="social-icon d-flex align-items-center justify-content-center"><span><i>Y</i></span></a>
+                        <a href="{% provider_login_url "vk" %}" class="social-icon d-flex align-items-center justify-content-center"><span><i class="fa fa-vk"></i></span></a>
+                    </p>
+		          <p class="text-center"><a href="{{ login_url }}">Уже есть аккаунт</a></p>
+		        </div>
+		      </div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<script src="{% static 'account/js/jquery.min.js' %}"></script>
+  <script src="{% static 'account/js/popper.js' %}"></script>
+  <script src="{% static 'account/js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'account/js/main.js' %}"></script>
+
+	</body>
+</html>
+
