@@ -3,3 +3,4 @@ venv_billboard
 .env
 draft.py
 /billboardsite/dump.rdb
+.idea

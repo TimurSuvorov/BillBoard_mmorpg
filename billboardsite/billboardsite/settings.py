@@ -29,7 +29,7 @@ else:
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', default='only_for_test')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -118,7 +118,7 @@ DATABASES = {
         'NAME': 'billboardsite_db',
         'USER': os.getenv('POSTGRES_USER'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-        'HOST': 'localhost',
+        'HOST': os.getenv('POSTGRES_HOST', default='localhost'),
         'PORT': '5432',
         }
     }
@@ -261,7 +261,7 @@ SOCIALACCOUNT_LOGIN_ON_GET = True
 # Additional authorization setting
 ACCOUNT_EMAIL_SUBJECT_PREFIX = '[MMORPG Billboard]'
 
-ADMINS = [('Timur_admin', 'suvorovt@gmail.com'),
+ADMINS = [(os.getenv('DJANGO_SUPERUSER_USERNAME'), os.getenv('DJANGO_SUPERUSER_EMAIL')),
           ]
 
 MANAGERS = []
@@ -282,8 +282,8 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER + '@yandex.ru'
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
 
 # Celery settings
-CELERY_BROKER_URL = 'redis://localhost:6379'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
