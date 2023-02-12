@@ -26,7 +26,7 @@
      ALTER ROLE postgres_user SET client_encoding TO 'utf8';
      ALTER ROLE postgres_user SET default_transaction_isolation TO 'read committed'; 
      ALTER ROLE postgres_user SET timezone TO 'UTC';
-     GRANT ALL PRIVILEGES ON DATABASE myproject TO postgres_user;
+     GRANT ALL PRIVILEGES ON DATABASE billboardsite_db TO postgres_user;
 
 **3. Настройка со стороны Django в IDE**
 ##### В файле *billboardsite/settings.py* удалите настройки по умолчанию DATABASES для SQLite3:

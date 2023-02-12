@@ -1,0 +1,78 @@
+version: "3.9"
+
+services:
+  web_billboardsite:
+    build: .
+    container_name: "web_billboardsite"
+    command: /bin/sh -c "python3 manage.py makemigrations --force-color --no-input -v 3
+      && python3 manage.py makemigrations --merge --no-input -v 3
+      && python3 manage.py migrate --force-color -v 3
+      && python3 clear_content_type.py
+      && python3 manage.py loaddata db_postgres_billboard.json
+      && python3 manage.py createsuperuser --noinput
+      && python3 manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - volume_billboardsite:/billboardsite
+    networks:
+      - postgres_network
+      - redis_network
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./.env
+    environment:
+      - POSTGRES_HOST=postgres
+      - CELERY_BROKER=redis://redis:6379/0
+      - CELERY_BACKEND=redis://redis:6379/0
+    links:
+      - postgres
+      - redis
+    depends_on:
+      - postgres
+      - redis
+
+  celery:
+    build: .
+    container_name: "celery"
+    command: celery -A billboardsite worker -l INFO
+    environment:
+      - POSTGRES_HOST=postgres
+      - CELERY_BROKER=redis://redis:6379/0
+      - CELERY_BACKEND=redis://redis:6379/0
+    volumes:
+      - volume_billboardsite:/billboardsite
+    networks:
+      - postgres_network
+      - redis_network
+    links:
+      - postgres
+      - redis
+    depends_on:
+      - web_billboardsite
+      - redis
+      - postgres
+
+  postgres:
+    restart: always
+    image: postgres
+    container_name: "postgres"
+    env_file:
+      - ./.env
+    networks:
+      - postgres_network
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:alpine
+    container_name: "redis"
+    networks:
+      - redis_network
+    restart: unless-stopped
+
+volumes:
+  volume_billboardsite:
+
+networks:
+  postgres_network:
+  redis_network:

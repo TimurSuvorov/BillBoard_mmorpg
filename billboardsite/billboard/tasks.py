@@ -62,7 +62,7 @@ def new_reply_mail_async(pk):
         sendsimplemail(subject=f'Новый отклик: «{reply.reply_preview()}»',
                        message=f'Привет {author_ann}! На Ваше объявление «{reply.announcement.announcement_preview()}» оставили новый отлик!',
                        recipient_list=[author_ann.email],
-                       consolemessage=f'SysInfo: Отправлено письмо о принятии отлика для {author_ann}'
+                       consolemessage=f'SysInfo: Отправлено письмо о новом отлике для {author_ann}'
                        )
 
 

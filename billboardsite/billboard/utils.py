@@ -2,6 +2,8 @@ import time
 
 from io import BytesIO
 from PIL import Image
+from functools import wraps
+
 from django.core.files import File
 from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
@@ -49,3 +51,14 @@ def check_resize_image(file, suffix_name, base_size: tuple = (150, 150)):
         new_image = File(thumb_io, name=new_name)  # Создание File объекта, который будет воспринимать поле ImageField модели
         return new_image
 
+
+def disable_for_loaddata(signal_handler):
+    """
+    Decorator that turns off signal handlers when loading fixture data.
+    """
+    @wraps(signal_handler)
+    def wrapper(*args, **kwargs):
+        if kwargs.get('raw'):
+            return
+        signal_handler(*args, **kwargs)
+    return wrapper
