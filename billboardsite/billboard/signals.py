@@ -11,7 +11,7 @@ from .utils import disable_for_loaddata
 @disable_for_loaddata
 def new_user_actions(sender, instance, **kwargs):
     if instance.verified:
-        new_user_actions_async.delay(user_id=instance.user_id)
+        new_user_actions_async.apply_async([instance.user_id], expires=120)
 
 
 @receiver(post_save, sender=User)
@@ -33,13 +33,13 @@ def reply_change_mail(sender, instance, **kwargs):
     if kwargs['created']:
         new_reply_mail_async.delay(pk=instance.pk)
     elif instance.is_approved == 'approved':
-        reply_approved_mail_async.delay(pk=instance.pk)
+        reply_approved_mail_async.apply_async([instance.pk], expires=120)
 
 
 @receiver(post_save, sender=Newsletter)
 @disable_for_loaddata
 def newsletter_mail(sender, instance, **kwargs):
     if instance.is_published and not instance.is_sent:
-        newsletter_mail_async.delay(pk=instance.pk)
+        newsletter_mail_async.apply_async([instance.pk], expires=120)
 
 
