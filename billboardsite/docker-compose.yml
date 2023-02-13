@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   web_billboardsite:
-    build: .
+    image: robott88/billboardsite
     container_name: "web_billboardsite"
     command: /bin/sh -c "python3 manage.py makemigrations --force-color --no-input -v 3
       && python3 manage.py makemigrations --merge --no-input -v 3
@@ -10,6 +10,8 @@ services:
       && python3 clear_content_type.py
       && python3 manage.py loaddata db_postgres_billboard.json
       && python3 manage.py createsuperuser --noinput
+      && echo Ссылка на сайт http://localhost:8000/billboard/announcements/
+      && echo Ссылка на админ-панель http://localhost:8000/admin
       && python3 manage.py runserver 0.0.0.0:8000"
     volumes:
       - volume_billboardsite:/billboardsite
@@ -32,9 +34,11 @@ services:
       - redis
 
   celery:
-    build: .
+    image: robott88/billboardsite
     container_name: "celery"
     command: celery -A billboardsite worker -l INFO
+    env_file:
+      - ./.env
     environment:
       - POSTGRES_HOST=postgres
       - CELERY_BROKER=redis://redis:6379/0
@@ -72,6 +76,7 @@ services:
 
 volumes:
   volume_billboardsite:
+
 
 networks:
   postgres_network:

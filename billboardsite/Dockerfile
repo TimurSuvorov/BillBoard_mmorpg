@@ -1,4 +1,5 @@
 FROM python:3.8-slim
+MAINTAINER Suvorov Timur
 
 # set work directory
 WORKDIR /billboardsite/

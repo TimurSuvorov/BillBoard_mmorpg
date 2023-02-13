@@ -22,7 +22,7 @@ dotenv_path = os.path.join(os.path.dirname(__file__), '../.env')
 if os.path.exists(dotenv_path):
     load_dotenv(dotenv_path)
 else:
-    print("Не найден файл переменных окружения '.env'")
+    print("IGNORE IF DOCKER: Не найден файл переменных окружения '.env'")
 
 
 # Quick-start development settings - unsuitable for production
@@ -262,6 +262,7 @@ SOCIALACCOUNT_LOGIN_ON_GET = True
 ACCOUNT_EMAIL_SUBJECT_PREFIX = '[MMORPG Billboard]'
 
 ADMINS = [(os.getenv('DJANGO_SUPERUSER_USERNAME'), os.getenv('DJANGO_SUPERUSER_EMAIL')),
+          'admin_example', 'suvorovt@gmail.com'
           ]
 
 MANAGERS = []
