@@ -1,3 +1,4 @@
+﻿
 
 # BillBoard_MMORPG Site  
 ### Техническое задание и общая информация о проекте  
@@ -11,7 +12,7 @@
 - фреймворк Django;  
 - хранение данных - PostgreSQL;  
 - регистрация/авторизация через email или социальные сети - allauth (подтверждение через 6-значный OTP);  
-- асинхронное выполнение задач по рассылке* и др. - Celery+Redis; 
+- асинхронное выполнение задач по e-mail рассылке* и др. - Celery+Redis; 
 - обработка фотоконтента перед сохранением на сервер - библиотека Pillow;
 - встроенный WYSIWYG-редактор - CKEditor;
 - оптимизация сайта - Django Debug Toolbar;
@@ -28,34 +29,6 @@
     - запрос от пользователя на возможность размещения статей в ленте;  
 
 ***  
-### Этапы запуска и настройки проекта (OS -  Ubuntu 20.04 LTS):  
-  
- 1. Склонируйте проект с GitHub локально и перейдите в папку "BillBoard_mmorpg":  
-```  
-git clone https://github.com/TimurSuvorov/BillBoard_mmorpg.git cd BillBoard_mmorpg  
-```  
- 2. Создайте виртуальное окружение для проекта и установите необходимые пакеты из файла *billboardsite/requirements.txt*:  
-```  
-python3 -m virtualenv venvBillboard  
-source venvBillboard/bin/activate  
-pip install -r billboardsite/requirements.txt  
-```  
- 3. Установите сервер Redis в Вашей OS:  
-```  
-sudo apt-get update  
-sudo apt-get install redis  
-```  
- 4. Произведите установку и настройку PostgreSQL [по инструкции](https://github.com/TimurSuvorov/BillBoard_mmorpg/blob/master/README_PostgreSQL.md)  
- 5. В файле *billboardsite/.env* замените шаблонное значение *django_secret_key* - на уникальный ключ  
- 6. Отправка e-mail писем происходит с помощью Yandex. Для этого:  
-    - выполните предварительные настройки: https://yandex.ru/support/mail/mail-clients/others.html  
-    - в файле *billboardsite/.env* замените шаблонные значения:  
-       - *yandex_EMAIL_HOST_USER* - имя пользователя (до @ в адресе)  
-       - *yandex_EMAIL_HOST_PASSWORD* - пароль приложения  
- 7. Теперь запустите всё необходимое в отдельных консольных окнах:  
-   - сервер Redis: ```redis-server```  
- - сервер PostgreSQL <sub>(уже должен работать)</sub>: ```sudo service postgresql start```  
- - [!] Запуск воркера Celery из каталога проекта *billboardsite/*: ```celery -A billboardsite worker -l INFO```  
- - [!] Запуск Django-проекта из каталога проекта *billboardsite/*: ```python manage.py runserver```  
-
-*[!] - убедитесь, что у Вас активировано виртуальное окружение
+### Развертывание проекта:  
+  Развертывание проекта 
+ 
