@@ -4,3 +4,4 @@ venv_billboard
 draft.py
 /billboardsite/dump.rdb
 .idea
+dump.rdb
