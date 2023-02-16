@@ -10,9 +10,9 @@ services:
       && python3 clear_content_type.py
       && python3 manage.py loaddata db_postgres_billboard.json
       && python3 manage.py createsuperuser --noinput
-      && echo Ссылка на сайт http://localhost:8000/billboard/announcements/
-      && echo Ссылка на админ-панель http://localhost:8000/admin
-      && python3 manage.py runserver 0.0.0.0:8000"
+      && echo Ссылка на сайт http://127.0.0.1:8000/billboard/announcements/
+      && echo Ссылка на админ-панель http://127.0.0.1:8000/admin
+      && nohup python3 manage.py runserver 0.0.0.0:8000"
     volumes:
       - volume_billboardsite:/billboardsite
     networks:
