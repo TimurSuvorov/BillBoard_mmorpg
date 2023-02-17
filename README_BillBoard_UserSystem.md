@@ -23,7 +23,7 @@ sudo apt-get install redis
        - *yandex_EMAIL_HOST_USER* - имя пользователя (до @ в адресе)  
        - *yandex_EMAIL_HOST_PASSWORD* - пароль приложения  
  7. Теперь запустите всё необходимое в отдельных консольных окнах: 
-	-  `redis-server` - сервер Redis:  
+	 -  `redis-server` - сервер Redis:  
 	 - `sudo service postgresql start` - сервер PostgreSQL <sub>(уже должен запущен)</sub>
 	 - `celery -A billboardsite worker -l INFO` - [!] воркер Celery из каталога проекта *billboardsite/*  
 	 - `python manage.py runserver` - [!] запуск Django-проекта из каталога проекта *billboardsite/* 

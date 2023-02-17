@@ -30,5 +30,5 @@
 
 ***  
 ### Развертывание проекта:  
-  Развертывание проекта можно произвести с помощью Docker или на пользовательской системе.
+  Развертывание проекта можно произвести с помощью [Docker](https://github.com/TimurSuvorov/BillBoard_mmorpg/blob/master/README_BillBoard_Docker.md) или [на пользовательской системе](https://github.com/TimurSuvorov/BillBoard_mmorpg/blob/master/README_BillBoard_UserSystem.md).
  
