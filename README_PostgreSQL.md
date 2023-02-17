@@ -56,7 +56,7 @@ DATABASES = {
 		  }  
     }
   ```
-  ##### Измените имя файла "*.env.example*" на "*.env.*" в billboardsite/. Замените шаблонные значения переменных окружения POSTGRES_USER и POSTGRES_PASSWORD: 
+  ##### Измените имя файла "*.env.UserSystemexample*" на "*.env.*" в billboardsite/. Замените шаблонные значения переменных окружения POSTGRES_USER и POSTGRES_PASSWORD: 
   ```
 	 # .env 
  POSTGRES_USER = 'postgres_user'       
@@ -79,4 +79,4 @@ DATABASES = {
   ```
  python manage.py loaddata db_postgres_billboard.json
  ```
-
+##### Продолжите выполнение основной [инструкции](./README_BillBoard_UserSystem.md#отправка-e-mail-писем-происходит-с-помощью-сервиса-yandex)
