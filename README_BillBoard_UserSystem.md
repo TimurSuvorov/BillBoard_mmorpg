@@ -23,10 +23,6 @@ sudo apt-get install redis
 ```
 yandex_EMAIL_HOST_USER = 'email_host_user' --> имя пользователя (до @ в адресе) из п.3
 yandex_EMAIL_HOST_PASSWORD  = 'email_host_password' --> пароль приложения  из п.3
-
-DJANGO_SUPERUSER_USERNAME = 'django_superuser_username' --> имя нового суперпользователя
-DJANGO_SUPERUSER_EMAIL = 'django_superuser_email' --> почта нового суперпользователя (в т.ч.для добавления в группу ADMINS)
-DJANGO_SUPERUSER_PASSWORD = 'django_superuser_password' --> пароль нового суперпользователя
 ```
  #### Теперь запустите всё необходимое в отдельных консольных окнах: 
 	 - `redis-server` - сервер Redis:  
