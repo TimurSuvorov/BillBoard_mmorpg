@@ -15,7 +15,7 @@ pip install -r billboardsite/requirements.txt
 sudo apt-get update  
 sudo apt-get install redis  
 ```  
- 4. Произведите установку и настройку **PostgreSQL** [по инструкции](https://github.com/TimurSuvorov/BillBoard_mmorpg/blob/master/README_PostgreSQL.md)  
+ 4. Произведите установку и настройку **PostgreSQL** [по инструкции](./README_PostgreSQL.md)  
  5. В файле *billboardsite/.env* замените шаблонное значение *django_secret_key* - на уникальный ключ  
  6. Отправка e-mail писем происходит с помощью Yandex. Для этого:  
     - выполните предварительные настройки: https://yandex.ru/support/mail/mail-clients/others.html  
@@ -25,7 +25,7 @@ sudo apt-get install redis
  7. Теперь запустите всё необходимое в отдельных консольных окнах: 
 	 -  `redis-server` - сервер Redis:  
 	 - `sudo service postgresql start` - сервер PostgreSQL <sub>(уже должен запущен)</sub>
-	 - `celery -A billboardsite worker -l INFO` - [!] воркер Celery из каталога проекта *billboardsite/*  
-	 - `python manage.py runserver` - [!] запуск Django-проекта из каталога проекта *billboardsite/* 
+	 - `celery -A billboardsite worker -l INFO` -  воркер Celery из каталога проекта *billboardsite/* [^*]  
+	 - `python manage.py runserver` - запуск Django-проекта из каталога проекта *billboardsite/* [^*]
 
-*[!] - убедитесь, что у Вас активировано виртуальное окружение
+[^*]: убедитесь, что у Вас активировано виртуальное окружение
