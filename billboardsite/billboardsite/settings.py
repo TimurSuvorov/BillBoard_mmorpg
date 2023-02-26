@@ -78,6 +78,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'billboard.middleware.TimeoutLogout',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'billboard.middleware.TimezoneMiddleware',
 
@@ -262,7 +263,7 @@ SOCIALACCOUNT_LOGIN_ON_GET = True
 ACCOUNT_EMAIL_SUBJECT_PREFIX = '[MMORPG Billboard]'
 
 ADMINS = [(os.getenv('DJANGO_SUPERUSER_USERNAME'), os.getenv('DJANGO_SUPERUSER_EMAIL')),
-          'admin_example', 'suvorovt@gmail.com'
+          ('admin_example', 'suvorovt@gmail.com'),
           ]
 
 MANAGERS = []
@@ -271,7 +272,7 @@ MANAGERS = []
 LOGIN_REDIRECT_URL = '/billboard/announcements/'
 LOGOUT_REDIRECT_URL = '/billboard/announcements/'
 
-# SMTP Yandex setting
+# For SMTP Yandex setting
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
 EMAIL_HOST_USER = os.getenv('yandex_EMAIL_HOST_USER')  # имя пользователя
@@ -282,13 +283,16 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER + '@yandex.ru'
 
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
 
-# Celery settings
+# For Celery settings
 CELERY_BROKER_URL = os.getenv('CELERY_BROKER', default='redis://localhost:6379/0')
 CELERY_RESULT_BACKEND = os.getenv('CELERY_BROKER', default='redis://localhost:6379/0')
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
-
+# For image processing
 IMAGE_ALLOWED_FORMATS = ['image/jpeg', 'image/jpg', 'image/png', 'image/mpo']
 IMAGE_MIN_SIZE = (150, 150)
+
+# For TimezoneMiddleware
+LOGOUT_TIMEOUT = 60 * 60 * 24  # once a day
