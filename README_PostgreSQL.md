@@ -14,8 +14,8 @@ sudo apt update sudo apt install postgresql postgresql-contrib
 
  ##### Запуск сервер PostgreSQL и проверка статуса: 
  ```
-sudo service postgresql 
-start service postgresql status 
+sudo service postgresql start 
+service postgresql status 
 >> 12/main (port 5432): online
 ```
 
